@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +30,9 @@ const Profile = () => {
     subscription: "Pro Plan",
     subscriptionStatus: "Active",
     nextBilling: "March 15, 2024",
+    interests: ["Technology", "Lifestyle", "Education"],
+    platform: "YouTube",
+    uploadRate: 8,
   });
 
   const [editForm, setEditForm] = useState(profile);
@@ -176,65 +179,75 @@ const Profile = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-studio-muted text-sm">Success Rate</p>
-                  <p className="text-3xl font-bold text-studio-text">75%</p>
+                  <p className="text-studio-muted text-sm">Upload Rate</p>
+                  <p className="text-3xl font-bold text-studio-text">{profile.uploadRate}/month</p>
                 </div>
                 <Badge variant="secondary" className="bg-blue-500/20 text-blue-400">
-                  Growing
+                  Target
                 </Badge>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Account & Subscription Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-studio-card border-studio-border">
-            <CardHeader>
-              <CardTitle className="text-studio-text flex items-center">
-                <CreditCard className="w-5 h-5 mr-2" />
-                Subscription
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-studio-muted">Plan</span>
-                <Badge className="bg-studio-accent/20 text-studio-accent">{profile.subscription}</Badge>
+        {/* Style & Preferences */}
+        <Card className="bg-studio-card border-studio-border">
+          <CardHeader>
+            <CardTitle className="text-studio-text flex items-center">
+              <Target className="w-5 h-5 mr-2" />
+              Content Style & Preferences
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-studio-text mb-3">Topics of Interest</h4>
+                <div className="flex flex-wrap gap-2">
+                  {profile.interests.map((interest, index) => (
+                    <Badge key={index} variant="secondary" className="bg-studio-accent/20 text-studio-accent">
+                      {interest}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-studio-muted">Status</span>
-                <span className="text-green-400">{profile.subscriptionStatus}</span>
+              
+              <div>
+                <h4 className="font-medium text-studio-text mb-3">Primary Platform</h4>
+                <div className="flex items-center space-x-2">
+                  <Youtube className="w-5 h-5 text-red-500" />
+                  <span className="text-studio-text font-medium">{profile.platform}</span>
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-studio-muted">Next Billing</span>
-                <span className="text-studio-text">{profile.nextBilling}</span>
-              </div>
-              <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
-                Manage Subscription
-              </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card className="bg-studio-card border-studio-border">
-            <CardHeader>
-              <CardTitle className="text-studio-text flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
-                Account Email
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                <span className="text-studio-text">{profile.email}</span>
-              </div>
-              <p className="text-sm text-studio-muted">
-                This email is used for login and important notifications
-              </p>
-              <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
-                Change Email
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Subscription Info */}
+        <Card className="bg-studio-card border-studio-border">
+          <CardHeader>
+            <CardTitle className="text-studio-text flex items-center">
+              <CreditCard className="w-5 h-5 mr-2" />
+              Subscription
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-studio-muted">Plan</span>
+              <Badge className="bg-studio-accent/20 text-studio-accent">{profile.subscription}</Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-studio-muted">Status</span>
+              <span className="text-green-400">{profile.subscriptionStatus}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-studio-muted">Next Billing</span>
+              <span className="text-studio-text">{profile.nextBilling}</span>
+            </div>
+            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
+              Manage Subscription
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Settings */}
         <Card className="bg-studio-card border-studio-border">
@@ -245,8 +258,26 @@ const Profile = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Support & Help */}
+            {/* Account Email */}
             <div className="space-y-3">
+              <h3 className="font-medium text-studio-text">Account</h3>
+              
+              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
+                <div className="flex items-center">
+                  <Mail className="w-5 h-5 mr-3 text-studio-muted" />
+                  <div>
+                    <h4 className="font-medium text-studio-text">Account Email</h4>
+                    <p className="text-sm text-studio-muted">{profile.email}</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
+                  Change Email
+                </Button>
+              </div>
+            </div>
+
+            {/* Support & Help */}
+            <div className="space-y-3 border-t border-studio-border pt-4">
               <h3 className="font-medium text-studio-text">Support & Help</h3>
               
               <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
