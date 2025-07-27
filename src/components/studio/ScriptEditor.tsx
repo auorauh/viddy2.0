@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ScriptBoard } from "../../pages/Studio";
 
@@ -12,7 +13,12 @@ interface ScriptEditorProps {
 }
 
 export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) => {
+  const [title, setTitle] = useState(script.title);
   const [content, setContent] = useState(script.content);
+  const [lists, setLists] = useState("");
+  const [details, setDetails] = useState("");
+  const [editing, setEditing] = useState("");
+  const [team, setTeam] = useState("");
 
   return (
     <div className="flex-1 flex flex-col">
@@ -29,9 +35,11 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
-            <h1 className="text-xl font-bold text-studio-text border border-border rounded px-3 py-1">
-              {script.title}
-            </h1>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="text-xl font-bold bg-transparent border border-border rounded px-3 py-1 w-auto min-w-[200px]"
+            />
           </div>
           
           <Button
@@ -71,6 +79,12 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             >
               Editing
             </TabsTrigger>
+            <TabsTrigger 
+              value="team"
+              className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
+            >
+              Team
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="script" className="mt-6 h-full">
@@ -86,19 +100,45 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
           <TabsContent value="lists" className="mt-6">
             <div className="bg-studio-card border border-border rounded-lg p-6 h-96">
-              <p className="text-studio-muted">Bullet points and lists for your script</p>
+              <Textarea
+                value={lists}
+                onChange={(e) => setLists(e.target.value)}
+                placeholder="Add bullet points and lists for your script..."
+                className="w-full h-full resize-none bg-transparent border-none text-studio-text text-base leading-relaxed focus:ring-0 focus:outline-none"
+              />
             </div>
           </TabsContent>
 
           <TabsContent value="details" className="mt-6">
             <div className="bg-studio-card border border-border rounded-lg p-6 h-96">
-              <p className="text-studio-muted">Production details and notes</p>
+              <Textarea
+                value={details}
+                onChange={(e) => setDetails(e.target.value)}
+                placeholder="Add production details and notes..."
+                className="w-full h-full resize-none bg-transparent border-none text-studio-text text-base leading-relaxed focus:ring-0 focus:outline-none"
+              />
             </div>
           </TabsContent>
 
           <TabsContent value="editing" className="mt-6">
             <div className="bg-studio-card border border-border rounded-lg p-6 h-96">
-              <p className="text-studio-muted">Post-production editing notes</p>
+              <Textarea
+                value={editing}
+                onChange={(e) => setEditing(e.target.value)}
+                placeholder="Add post-production editing notes..."
+                className="w-full h-full resize-none bg-transparent border-none text-studio-text text-base leading-relaxed focus:ring-0 focus:outline-none"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="team" className="mt-6">
+            <div className="bg-studio-card border border-border rounded-lg p-6 h-96">
+              <Textarea
+                value={team}
+                onChange={(e) => setTeam(e.target.value)}
+                placeholder="Add team notes and collaboration details..."
+                className="w-full h-full resize-none bg-transparent border-none text-studio-text text-base leading-relaxed focus:ring-0 focus:outline-none"
+              />
             </div>
           </TabsContent>
         </Tabs>
