@@ -15,7 +15,7 @@ export interface ScriptBoard {
 export type ViewMode = 'boards' | 'editor' | 'teleprompter';
 
 const Studio = () => {
-  const [scripts] = useState<ScriptBoard[]>([
+  const [scripts, setScripts] = useState<ScriptBoard[]>([
     {
       id: '1',
       title: 'How to Kickflip',
@@ -42,9 +42,21 @@ const Studio = () => {
     },
   ]);
 
-  const [activeFolder] = useState<string>('4');
+  const [activeFolder, setActiveFolder] = useState<string>('4');
   const [viewMode, setViewMode] = useState<ViewMode>('boards');
   const [activeScript, setActiveScript] = useState<ScriptBoard | null>(null);
+
+  const handleNewProject = (folderId: string) => {
+    const newScript: ScriptBoard = {
+      id: Date.now().toString(),
+      title: 'New Project',
+      content: '',
+      folderId: folderId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    setScripts(prev => [...prev, newScript]);
+  };
 
   const handleScriptSelect = (script: ScriptBoard) => {
     setActiveScript(script);
@@ -85,6 +97,8 @@ const Studio = () => {
           activeFolder={activeFolder}
           folders={folders}
           onScriptSelect={handleScriptSelect}
+          onNewProject={handleNewProject}
+          onFolderChange={setActiveFolder}
         />
       )}
       

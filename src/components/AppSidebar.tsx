@@ -82,11 +82,14 @@ export function AppSidebar() {
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  className="h-10 px-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                >
-                  <Plus className="h-5 w-5" />
-                  {!collapsed && <span className="ml-3">New Project</span>}
+                <SidebarMenuButton asChild>
+                  <NavLink 
+                    to="/" 
+                    className="h-10 px-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  >
+                    <Plus className="h-5 w-5" />
+                    {!collapsed && <span className="ml-3">New Project</span>}
+                  </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
