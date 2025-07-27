@@ -83,15 +83,6 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
               </Button>
             </div>
             <h1 className="text-2xl font-bold text-studio-text">{activeFolderName}</h1>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-studio-muted"
-              onClick={handleNewProject}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              New Project
-            </Button>
             <div className="flex items-center space-x-2 text-studio-muted">
               <Button 
                 variant="ghost" 
@@ -162,36 +153,36 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="border-t border-border p-6">
-        <div className="flex items-center justify-center space-x-6">
+      <footer className="border-t border-border p-8 mt-8">
+        <div className="flex items-center justify-center space-x-8">
           <Button
             variant="ghost"
             size="lg"
-            className="flex items-center space-x-2 text-studio-text hover:text-studio-accent"
+            className="flex flex-col items-center space-y-2 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
-            <Home className="h-5 w-5" />
-            <span>Studio</span>
+            <Home className="h-6 w-6" />
+            <span className="text-sm">Studio</span>
           </Button>
           
           <Button
             variant="ghost"
             size="lg"
             onClick={handleNewProject}
-            className="flex items-center space-x-2 text-studio-text hover:text-studio-accent"
+            className="flex flex-col items-center space-y-2 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
-            <Plus className="h-5 w-5" />
-            <span>New Project</span>
+            <Plus className="h-6 w-6" />
+            <span className="text-sm">New Project</span>
           </Button>
           
           <Button
             variant="ghost"
             size="lg"
             asChild
-            className="flex items-center space-x-2 text-studio-text hover:text-studio-accent"
+            className="flex flex-col items-center space-y-2 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
             <NavLink to="/profile">
-              <User className="h-5 w-5" />
-              <span>Profile</span>
+              <User className="h-6 w-6" />
+              <span className="text-sm">Profile</span>
             </NavLink>
           </Button>
         </div>

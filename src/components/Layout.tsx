@@ -12,9 +12,9 @@ export default function Layout({ children }: LayoutProps) {
         <AppSidebar />
         
         <div className="flex-1 flex flex-col">
-          <header className="h-12 flex items-center border-b border-border bg-background">
+          <header className="h-12 flex items-center justify-between border-b border-border bg-background">
             <SidebarTrigger className="ml-4 text-foreground" />
-            <h1 className="ml-4 text-xl font-bold text-foreground">viddy studio</h1>
+            <h1 className="mr-4 text-xl font-bold text-foreground">viddy studio</h1>
           </header>
           
           <main className="flex-1">
