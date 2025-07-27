@@ -62,54 +62,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Bottom Navigation Section */}
-        <SidebarGroup className="mt-auto border-t border-sidebar-border pt-4">
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink 
-                    to="/" 
-                    className={({ isActive }) => cn(
-                      "h-10 px-3 text-white hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                      isActive && !isProfilePage ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium" : ""
-                    )}
-                  >
-                    <Home className="h-5 w-5 text-white" />
-                    {!collapsed && <span className="ml-3 text-white">Studio</span>}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink 
-                    to="/" 
-                    className="h-10 px-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  >
-                    <Plus className="h-5 w-5" />
-                    {!collapsed && <span className="ml-3">New Project</span>}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink 
-                    to="/profile" 
-                    className={({ isActive }) => cn(
-                      "h-10 px-3 text-white hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                      isActive ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium" : ""
-                    )}
-                  >
-                    <User className="h-5 w-5 text-white" />
-                    {!collapsed && <span className="ml-3 text-white">Profile</span>}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Search, Mic, ChevronLeft, ChevronRight, Grid3X3, List, Plus } from "lucide-react";
+import { Search, Mic, ChevronLeft, ChevronRight, Grid3X3, List, Plus, Home, User } from "lucide-react";
+import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { ScriptBoard } from "../../pages/Studio";
@@ -91,9 +92,6 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
               <Plus className="h-4 w-4 mr-2" />
               New Project
             </Button>
-            <Button variant="ghost" size="sm" className="text-studio-muted">
-              Team
-            </Button>
             <div className="flex items-center space-x-2 text-studio-muted">
               <Button 
                 variant="ghost" 
@@ -162,6 +160,42 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
           </div>
         )}
       </main>
+
+      {/* Bottom Navigation */}
+      <footer className="border-t border-border p-6">
+        <div className="flex items-center justify-center space-x-6">
+          <Button
+            variant="ghost"
+            size="lg"
+            className="flex items-center space-x-2 text-studio-text hover:text-studio-accent"
+          >
+            <Home className="h-5 w-5" />
+            <span>Studio</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={handleNewProject}
+            className="flex items-center space-x-2 text-studio-text hover:text-studio-accent"
+          >
+            <Plus className="h-5 w-5" />
+            <span>New Project</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="lg"
+            asChild
+            className="flex items-center space-x-2 text-studio-text hover:text-studio-accent"
+          >
+            <NavLink to="/profile">
+              <User className="h-5 w-5" />
+              <span>Profile</span>
+            </NavLink>
+          </Button>
+        </div>
+      </footer>
     </div>
   );
 };
