@@ -48,7 +48,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col h-full">
       {/* Header */}
       <header className="p-6 border-b border-border">
         <div className="flex items-center justify-between">
@@ -62,6 +62,8 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
               <Mic className="absolute right-3 top-3 h-4 w-4 text-studio-muted" />
             </div>
           </div>
+          
+          <h1 className="text-2xl font-bold text-studio-text absolute left-1/2 transform -translate-x-1/2">{activeFolderName}</h1>
           
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
@@ -82,7 +84,6 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
                 <List className="h-4 w-4" />
               </Button>
             </div>
-            <h1 className="text-2xl font-bold text-studio-text">{activeFolderName}</h1>
             <div className="flex items-center space-x-2 text-studio-muted">
               <Button 
                 variant="ghost" 
@@ -109,7 +110,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </header>
 
       {/* Content */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6 overflow-auto">
         {viewType === 'card' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentScripts.map((script) => (
