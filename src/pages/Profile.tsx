@@ -234,7 +234,7 @@ const Profile = () => {
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center">
               <Target className="w-5 h-5 mr-2" />
-              Content Style & Preferences
+              Style & Preferences
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -258,33 +258,6 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Subscription Info */}
-        <Card className="bg-studio-card border-studio-border">
-          <CardHeader>
-            <CardTitle className="text-studio-text flex items-center">
-              <CreditCard className="w-5 h-5 mr-2" />
-              Subscription
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-studio-muted">Plan</span>
-              <Badge className="bg-studio-accent/20 text-studio-accent">{profile.subscription}</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-studio-muted">Status</span>
-              <span className="text-green-400">{profile.subscriptionStatus}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-studio-muted">Next Billing</span>
-              <span className="text-studio-text">{profile.nextBilling}</span>
-            </div>
-            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
-              Manage Subscription
-            </Button>
           </CardContent>
         </Card>
 
@@ -538,6 +511,33 @@ const Profile = () => {
                 </Button>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Subscription */}
+        <Card className="bg-studio-card border-studio-border">
+          <CardHeader>
+            <CardTitle className="text-studio-text flex items-center">
+              <CreditCard className="w-5 h-5 mr-2" />
+              Subscription
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-studio-muted">Plan</span>
+              <Badge className="bg-studio-accent/20 text-studio-accent">{profile.subscription}</Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-studio-muted">Status</span>
+              <span className="text-green-400">{profile.subscriptionStatus}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-studio-muted">Next Billing</span>
+              <span className="text-studio-text">{profile.nextBilling}</span>
+            </div>
+            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
+              Manage Subscription
+            </Button>
           </CardContent>
         </Card>
         </div>
