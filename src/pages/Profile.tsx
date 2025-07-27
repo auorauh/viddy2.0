@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -362,17 +362,17 @@ const Profile = () => {
       </div>
       
       {/* Bottom Navigation */}
-      <footer className="border-t border-border p-8 mt-8">
-        <div className="flex items-center justify-center space-x-8">
+      <footer className="border-t border-border p-4 md:p-8 mt-8">
+        <div className="flex items-center justify-center space-x-4 md:space-x-8">
           <Button
             variant="ghost"
             size="lg"
             asChild
-            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
             <NavLink to="/">
-              <Home className="h-6 w-6" />
-              <span className="text-sm">Studio</span>
+              <Home className="h-5 w-5 md:h-6 md:w-6" />
+              <span className="text-xs md:text-sm">Studio</span>
             </NavLink>
           </Button>
           
@@ -380,21 +380,33 @@ const Profile = () => {
             variant="ghost"
             size="lg"
             asChild
-            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
             <NavLink to="/">
-              <Plus className="h-6 w-6" />
-              <span className="text-sm">New Project</span>
+              <Plus className="h-5 w-5 md:h-6 md:w-6" />
+              <span className="text-xs md:text-sm">New Project</span>
+            </NavLink>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="lg"
+            asChild
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
+          >
+            <NavLink to="/chatbot">
+              <Bot className="h-5 w-5 md:h-6 md:w-6" />
+              <span className="text-xs md:text-sm">Ask Viddy</span>
             </NavLink>
           </Button>
           
           <Button
             variant="ghost"
             size="lg"
-            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
-            <User className="h-6 w-6" />
-            <span className="text-sm">Profile</span>
+            <User className="h-5 w-5 md:h-6 md:w-6" />
+            <span className="text-xs md:text-sm">Profile</span>
           </Button>
         </div>
       </footer>
