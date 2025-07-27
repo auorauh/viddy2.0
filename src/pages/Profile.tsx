@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,9 @@ const Profile = () => {
     joinDate: "January 2024",
     totalScripts: 24,
     totalRecordings: 18,
+    subscription: "Pro Plan",
+    subscriptionStatus: "Active",
+    nextBilling: "March 15, 2024",
   });
 
   const [editForm, setEditForm] = useState(profile);
@@ -184,40 +187,143 @@ const Profile = () => {
           </Card>
         </div>
 
+        {/* Account & Subscription Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="bg-studio-card border-studio-border">
+            <CardHeader>
+              <CardTitle className="text-studio-text flex items-center">
+                <CreditCard className="w-5 h-5 mr-2" />
+                Subscription
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-studio-muted">Plan</span>
+                <Badge className="bg-studio-accent/20 text-studio-accent">{profile.subscription}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-studio-muted">Status</span>
+                <span className="text-green-400">{profile.subscriptionStatus}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-studio-muted">Next Billing</span>
+                <span className="text-studio-text">{profile.nextBilling}</span>
+              </div>
+              <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
+                Manage Subscription
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-studio-card border-studio-border">
+            <CardHeader>
+              <CardTitle className="text-studio-text flex items-center">
+                <Mail className="w-5 h-5 mr-2" />
+                Account Email
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                <span className="text-studio-text">{profile.email}</span>
+              </div>
+              <p className="text-sm text-studio-muted">
+                This email is used for login and important notifications
+              </p>
+              <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
+                Change Email
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Settings */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
-            <CardTitle className="text-studio-text">Settings</CardTitle>
+            <CardTitle className="text-studio-text flex items-center">
+              <Settings className="w-5 h-5 mr-2" />
+              Settings
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-              <div>
-                <h3 className="font-medium text-studio-text">Email Notifications</h3>
-                <p className="text-sm text-studio-muted">Receive updates about your recordings</p>
+            {/* Support & Help */}
+            <div className="space-y-3">
+              <h3 className="font-medium text-studio-text">Support & Help</h3>
+              
+              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
+                <div className="flex items-center">
+                  <Bug className="w-5 h-5 mr-3 text-studio-muted" />
+                  <div>
+                    <h4 className="font-medium text-studio-text">Submit a Bug</h4>
+                    <p className="text-sm text-studio-muted">Report issues or problems</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
+                  Report <ExternalLink className="w-4 h-4 ml-1" />
+                </Button>
               </div>
-              <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                Configure
-              </Button>
+
+              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
+                <div className="flex items-center">
+                  <HelpCircle className="w-5 h-5 mr-3 text-studio-muted" />
+                  <div>
+                    <h4 className="font-medium text-studio-text">Help Center</h4>
+                    <p className="text-sm text-studio-muted">Get help and view documentation</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
+                  Visit <ExternalLink className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
+                <div className="flex items-center">
+                  <UserPlus className="w-5 h-5 mr-3 text-studio-muted" />
+                  <div>
+                    <h4 className="font-medium text-studio-text">Invite Friends</h4>
+                    <p className="text-sm text-studio-muted">Share viddy studio with others</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
+                  Invite
+                </Button>
+              </div>
             </div>
-            
-            <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-              <div>
-                <h3 className="font-medium text-studio-text">Export Settings</h3>
-                <p className="text-sm text-studio-muted">Manage your video export preferences</p>
+
+            <div className="border-t border-studio-border pt-4 space-y-3">
+              <h3 className="font-medium text-studio-text">Legal & Account</h3>
+              
+              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
+                <div>
+                  <h4 className="font-medium text-studio-text">Terms of Service</h4>
+                  <p className="text-sm text-studio-muted">View our terms and conditions</p>
+                </div>
+                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
+                  View <ExternalLink className="w-4 h-4 ml-1" />
+                </Button>
               </div>
-              <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                Manage
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-              <div>
-                <h3 className="font-medium text-studio-text">Account Security</h3>
-                <p className="text-sm text-studio-muted">Update password and security settings</p>
+
+              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
+                <div>
+                  <h4 className="font-medium text-studio-text">Privacy Policy</h4>
+                  <p className="text-sm text-studio-muted">How we handle your data</p>
+                </div>
+                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
+                  View <ExternalLink className="w-4 h-4 ml-1" />
+                </Button>
               </div>
-              <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                Update
-              </Button>
+
+              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
+                <div className="flex items-center">
+                  <LogOut className="w-5 h-5 mr-3 text-red-400" />
+                  <div>
+                    <h4 className="font-medium text-studio-text">Log Out</h4>
+                    <p className="text-sm text-studio-muted">Sign out of your account</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="bg-studio-bg border-red-500/20 text-red-400 hover:bg-red-500/10">
+                  Log Out
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
