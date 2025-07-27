@@ -61,6 +61,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				studio: {
+					bg: 'hsl(var(--studio-bg))',
+					card: 'hsl(var(--studio-card))',
+					sidebar: 'hsl(var(--studio-sidebar))',
+					accent: 'hsl(var(--studio-accent))',
+					record: 'hsl(var(--studio-record))',
+					text: 'hsl(var(--studio-text))',
+					muted: 'hsl(var(--studio-muted))'
 				}
 			},
 			borderRadius: {
