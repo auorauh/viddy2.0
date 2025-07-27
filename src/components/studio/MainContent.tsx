@@ -111,12 +111,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </header>
 
       {/* Mobile Header */}
-      <header className="p-4 space-y-4 border-b border-border md:hidden">
-        {/* viddy studio */}
-        <div className="text-center">
-          <h1 className="text-xl font-bold text-foreground">viddy studio</h1>
-        </div>
-        
+      <header className="p-4 space-y-3 border-b border-border md:hidden">
         {/* Folder name */}
         <div className="text-center">
           <h2 className="text-lg font-semibold text-studio-text">{activeFolderName}</h2>
@@ -124,22 +119,22 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
         
         {/* Search bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-studio-muted" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-studio-muted" />
           <Input 
             placeholder="Search"
-            className="w-full pl-10 pr-10 bg-studio-card border-border text-studio-text"
+            className="w-full pl-10 pr-10 bg-studio-card border-border text-studio-text h-10"
           />
-          <Mic className="absolute right-3 top-3 h-4 w-4 text-studio-muted" />
+          <Mic className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-studio-muted" />
         </div>
         
         {/* View modes and pagination */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             <Button
               variant={viewType === 'card' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setViewType('card')}
-              className="p-2"
+              className="h-8 w-8 p-0"
             >
               <Grid3X3 className="h-4 w-4" />
             </Button>
@@ -147,28 +142,28 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
               variant={viewType === 'list' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setViewType('list')}
-              className="p-2"
+              className="h-8 w-8 p-0"
             >
               <List className="h-4 w-4" />
             </Button>
           </div>
-          <div className="flex items-center space-x-2 text-studio-muted">
+          <div className="flex items-center space-x-1 text-studio-muted">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className="p-1"
+              className="h-8 w-8 p-0"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="text-sm">{currentPage}/{totalPages || 1}</span>
+            <span className="text-sm px-2">{currentPage}/{totalPages || 1}</span>
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={handleNextPage}
               disabled={currentPage === totalPages || totalPages === 0}
-              className="p-1"
+              className="h-8 w-8 p-0"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -221,36 +216,36 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="border-t border-border p-4 md:p-8 mt-4 md:mt-8">
-        <div className="flex items-center justify-center space-x-4 md:space-x-8">
+      <footer className="border-t border-border p-6 md:p-8 mt-6 md:mt-8 safe-area-pb">
+        <div className="flex items-center justify-center space-x-6 md:space-x-8">
           <Button
             variant="ghost"
             size="lg"
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
-            <Home className="h-5 w-5 md:h-6 md:w-6" />
-            <span className="text-xs md:text-sm">Studio</span>
+            <Home className="h-5 w-5" />
+            <span className="text-sm">Studio</span>
           </Button>
           
           <Button
             variant="ghost"
             size="lg"
             onClick={handleNewProject}
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
-            <Plus className="h-5 w-5 md:h-6 md:w-6" />
-            <span className="text-xs md:text-sm">New Project</span>
+            <Plus className="h-5 w-5" />
+            <span className="text-sm">New Project</span>
           </Button>
           
           <Button
             variant="ghost"
             size="lg"
             asChild
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
             <NavLink to="/profile">
-              <User className="h-5 w-5 md:h-6 md:w-6" />
-              <span className="text-xs md:text-sm">Profile</span>
+              <User className="h-5 w-5" />
+              <span className="text-sm">Profile</span>
             </NavLink>
           </Button>
         </div>
