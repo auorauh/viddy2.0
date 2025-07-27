@@ -1,7 +1,13 @@
 import { Search, Mic, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScriptBoard, Folder } from "../VideoStudio";
+import type { ScriptBoard } from "../../pages/Studio";
+
+interface Folder {
+  id: string;
+  name: string;
+  isActive?: boolean;
+}
 
 interface MainContentProps {
   scripts: ScriptBoard[];

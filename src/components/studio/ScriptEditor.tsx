@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScriptBoard } from "../VideoStudio";
+import type { ScriptBoard } from "../../pages/Studio";
 
 interface ScriptEditorProps {
   script: ScriptBoard;

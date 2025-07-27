@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Sidebar } from "./studio/Sidebar";
-import { MainContent } from "./studio/MainContent";
-import { ScriptEditor } from "./studio/ScriptEditor";
-import { TeleprompterMode } from "./studio/TeleprompterMode";
+import { MainContent } from "@/components/studio/MainContent";
+import { ScriptEditor } from "@/components/studio/ScriptEditor";
+import { TeleprompterMode } from "@/components/studio/TeleprompterMode";
 
 export interface ScriptBoard {
   id: string;
@@ -13,24 +12,9 @@ export interface ScriptBoard {
   updatedAt: Date;
 }
 
-export interface Folder {
-  id: string;
-  name: string;
-  isActive?: boolean;
-}
-
 export type ViewMode = 'boards' | 'editor' | 'teleprompter';
 
-const VideoStudio = () => {
-  const [folders] = useState<Folder[]>([
-    { id: '1', name: 'All Scripts', isActive: true },
-    { id: '2', name: 'TikTok' },
-    { id: '3', name: 'Instagram' },
-    { id: '4', name: 'YouTube Videos' },
-    { id: '5', name: 'Greater Creator' },
-    { id: '6', name: 'Movements Series' },
-  ]);
-
+const Studio = () => {
   const [scripts] = useState<ScriptBoard[]>([
     {
       id: '1',
@@ -58,7 +42,7 @@ const VideoStudio = () => {
     },
   ]);
 
-  const [activeFolder, setActiveFolder] = useState<string>('4');
+  const [activeFolder] = useState<string>('4');
   const [viewMode, setViewMode] = useState<ViewMode>('boards');
   const [activeScript, setActiveScript] = useState<ScriptBoard | null>(null);
 
@@ -84,41 +68,42 @@ const VideoStudio = () => {
     activeFolder === '1' ? true : script.folderId === activeFolder
   );
 
+  const folders = [
+    { id: '1', name: 'All Scripts', isActive: true },
+    { id: '2', name: 'TikTok' },
+    { id: '3', name: 'Instagram' },
+    { id: '4', name: 'YouTube Videos' },
+    { id: '5', name: 'Greater Creator' },
+    { id: '6', name: 'Movements Series' },
+  ];
+
   return (
-    <div className="min-h-screen bg-studio-bg flex">
-      <Sidebar 
-        folders={folders}
-        activeFolder={activeFolder}
-        onFolderSelect={setActiveFolder}
-      />
+    <div className="flex-1 flex flex-col">
+      {viewMode === 'boards' && (
+        <MainContent 
+          scripts={filteredScripts}
+          activeFolder={activeFolder}
+          folders={folders}
+          onScriptSelect={handleScriptSelect}
+        />
+      )}
       
-      <div className="flex-1 flex flex-col">
-        {viewMode === 'boards' && (
-          <MainContent 
-            scripts={filteredScripts}
-            activeFolder={activeFolder}
-            folders={folders}
-            onScriptSelect={handleScriptSelect}
-          />
-        )}
-        
-        {viewMode === 'editor' && activeScript && (
-          <ScriptEditor 
-            script={activeScript}
-            onRecord={handleRecord}
-            onBack={handleBackToBoards}
-          />
-        )}
-        
-        {viewMode === 'teleprompter' && activeScript && (
-          <TeleprompterMode 
-            script={activeScript}
-            onBack={handleBackToEditor}
-          />
-        )}
-      </div>
+      {viewMode === 'editor' && activeScript && (
+        <ScriptEditor 
+          script={activeScript}
+          onRecord={handleRecord}
+          onBack={handleBackToBoards}
+        />
+      )}
+      
+      {viewMode === 'teleprompter' && activeScript && (
+        <TeleprompterMode 
+          script={activeScript}
+          onBack={handleBackToEditor}
+        />
+      )}
     </div>
   );
 };
 
-export default VideoStudio;
+export default Studio;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, RotateCcw, Play, Square, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScriptBoard } from "../VideoStudio";
+import type { ScriptBoard } from "../../pages/Studio";
 
 interface TeleprompterModeProps {
   script: ScriptBoard;
