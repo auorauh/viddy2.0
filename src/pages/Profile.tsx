@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus } from "lucide-react";
+import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,7 +37,8 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="flex-1 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Profile Header */}
         <Card className="bg-studio-card border-studio-border">
@@ -219,7 +221,46 @@ const Profile = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
+      
+      {/* Bottom Navigation */}
+      <footer className="border-t border-border p-8 mt-8">
+        <div className="flex items-center justify-center space-x-8">
+          <Button
+            variant="ghost"
+            size="lg"
+            asChild
+            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+          >
+            <NavLink to="/">
+              <Home className="h-6 w-6" />
+              <span className="text-sm">Studio</span>
+            </NavLink>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="lg"
+            asChild
+            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+          >
+            <NavLink to="/">
+              <Plus className="h-6 w-6" />
+              <span className="text-sm">New Project</span>
+            </NavLink>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="lg"
+            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+          >
+            <User className="h-6 w-6" />
+            <span className="text-sm">Profile</span>
+          </Button>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -158,7 +158,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
           <Button
             variant="ghost"
             size="lg"
-            className="flex flex-col items-center space-y-2 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
             <Home className="h-6 w-6" />
             <span className="text-sm">Studio</span>
@@ -168,7 +168,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             variant="ghost"
             size="lg"
             onClick={handleNewProject}
-            className="flex flex-col items-center space-y-2 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
             <Plus className="h-6 w-6" />
             <span className="text-sm">New Project</span>
@@ -178,7 +178,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             variant="ghost"
             size="lg"
             asChild
-            className="flex flex-col items-center space-y-2 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
           >
             <NavLink to="/profile">
               <User className="h-6 w-6" />
