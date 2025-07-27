@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +22,7 @@ import {
 
 const Profile = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAiSettingsDialogOpen, setIsAiSettingsDialogOpen] = useState(false);
   const [profile, setProfile] = useState({
     name: "Alex Johnson",
     email: "alex.johnson@example.com",
@@ -35,11 +38,47 @@ const Profile = () => {
     uploadRate: 8,
   });
 
+  const [aiSettings, setAiSettings] = useState({
+    defaultModel: "gpt-4",
+    apiKey: "",
+    promptTemplates: [
+      "Create a YouTube video script about [topic]",
+      "Generate engaging social media captions for [content]",
+      "Write a tutorial outline for [subject]"
+    ]
+  });
+
+  const [newTemplate, setNewTemplate] = useState("");
+
   const [editForm, setEditForm] = useState(profile);
 
   const handleSave = () => {
     setProfile(editForm);
     setIsEditDialogOpen(false);
+  };
+
+  const handleAiSettingsSave = () => {
+    // In a real app, this would save to a secure backend
+    // For now, we'll save to localStorage (not recommended for API keys in production)
+    localStorage.setItem('aiSettings', JSON.stringify(aiSettings));
+    setIsAiSettingsDialogOpen(false);
+  };
+
+  const addPromptTemplate = () => {
+    if (newTemplate.trim()) {
+      setAiSettings(prev => ({
+        ...prev,
+        promptTemplates: [...prev.promptTemplates, newTemplate.trim()]
+      }));
+      setNewTemplate("");
+    }
+  };
+
+  const removePromptTemplate = (index: number) => {
+    setAiSettings(prev => ({
+      ...prev,
+      promptTemplates: prev.promptTemplates.filter((_, i) => i !== index)
+    }));
   };
 
   return (
@@ -246,6 +285,149 @@ const Profile = () => {
             <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
               Manage Subscription
             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Ask Viddy AI Settings */}
+        <Card className="bg-studio-card border-studio-border">
+          <CardHeader>
+            <CardTitle className="text-studio-text flex items-center justify-between">
+              <div className="flex items-center">
+                <Bot className="w-5 h-5 mr-2" />
+                Ask Viddy Settings
+              </div>
+              <Dialog open={isAiSettingsDialogOpen} onOpenChange={setIsAiSettingsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configure
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-studio-text">AI Assistant Settings</DialogTitle>
+                    <DialogDescription className="text-studio-muted">
+                      Configure your AI preferences for Ask Viddy
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-6">
+                    {/* Security Warning */}
+                    <Alert className="border-orange-500/20 bg-orange-500/10">
+                      <AlertDescription className="text-orange-200">
+                        <strong>Security Notice:</strong> API keys are currently stored locally. For production use, we recommend connecting to Supabase for secure secret management.
+                      </AlertDescription>
+                    </Alert>
+
+                    {/* AI Model Selection */}
+                    <div>
+                      <Label htmlFor="model" className="text-studio-text">Default AI Model</Label>
+                      <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
+                        <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
+                          <SelectValue placeholder="Select AI model" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-studio-card border-studio-border">
+                          <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
+                          <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
+                          <SelectItem value="claude-3" className="text-studio-text">Claude-3</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    {/* API Key */}
+                    <div>
+                      <Label htmlFor="apiKey" className="text-studio-text">API Key</Label>
+                      <Input
+                        id="apiKey"
+                        type="password"
+                        value={aiSettings.apiKey}
+                        onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
+                        placeholder="Enter your OpenAI API key"
+                        className="bg-studio-bg border-studio-border text-studio-text"
+                      />
+                      <p className="text-xs text-studio-muted mt-1">
+                        Your API key is stored locally in your browser
+                      </p>
+                    </div>
+                    
+                    {/* Prompt Templates */}
+                    <div>
+                      <Label className="text-studio-text">Prompt Templates</Label>
+                      <div className="space-y-2 mt-2">
+                        {aiSettings.promptTemplates.map((template, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-studio-bg rounded border border-studio-border">
+                            <span className="text-studio-text text-sm flex-1">{template}</span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removePromptTemplate(index)}
+                              className="text-red-400 hover:text-red-300 p-1"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        
+                        <div className="flex space-x-2">
+                          <Input
+                            value={newTemplate}
+                            onChange={(e) => setNewTemplate(e.target.value)}
+                            placeholder="Add new prompt template..."
+                            className="bg-studio-bg border-studio-border text-studio-text flex-1"
+                          />
+                          <Button
+                            onClick={addPromptTemplate}
+                            size="sm"
+                            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                          >
+                            Add
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsAiSettingsDialogOpen(false)}
+                      className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleAiSettingsSave}
+                      className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                    >
+                      Save Settings
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-medium text-studio-text mb-2">Current AI Model</h4>
+                <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                  <span className="text-studio-accent font-medium">{aiSettings.defaultModel}</span>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-studio-text mb-2">Prompt Templates</h4>
+                <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                  <span className="text-studio-text">{aiSettings.promptTemplates.length} templates</span>
+                </div>
+              </div>
+            </div>
+            
+            <Alert className="border-blue-500/20 bg-blue-500/10">
+              <AlertDescription className="text-blue-200">
+                💡 <strong>Tip:</strong> Connect to Supabase for secure API key storage and enhanced AI features.
+              </AlertDescription>
+            </Alert>
           </CardContent>
         </Card>
 
