@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2, Crown, Edit, Eye, Users } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2, Crown, Edit, Eye, Users, MessageCircleQuestion } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +24,7 @@ const Profile = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  const [isQuestionsDialogOpen, setIsQuestionsDialogOpen] = useState(false);
   const [profile, setProfile] = useState({
     name: "Alex Johnson",
     email: "alex.johnson@example.com",
@@ -310,6 +311,64 @@ const Profile = () => {
                   <span className="text-studio-text font-medium">{profile.platform}</span>
                 </div>
               </div>
+            </div>
+            
+            <div className="pt-4 border-t border-studio-border">
+              <Dialog open={isQuestionsDialogOpen} onOpenChange={setIsQuestionsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90">
+                    <MessageCircleQuestion className="w-4 h-4 mr-2" />
+                    Play 20 Questions
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-studio-text">Play 20 Questions with Viddy</DialogTitle>
+                    <DialogDescription className="text-studio-muted">
+                      Let Viddy ask you 20 questions to get to know you better and help come up with personalized video ideas.
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4">
+                    <div className="p-4 bg-studio-bg rounded-lg border border-studio-border">
+                      <div className="flex items-start space-x-3">
+                        <Bot className="w-6 h-6 text-studio-accent mt-1" />
+                        <div>
+                          <p className="text-studio-text font-medium mb-2">Hi! I'm excited to learn more about you.</p>
+                          <p className="text-studio-muted">I'll ask you 20 questions to understand your interests, goals, and style. This will help me suggest personalized video ideas that match your unique perspective.</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-studio-bg rounded-lg border border-studio-border">
+                      <div className="flex items-start space-x-3">
+                        <Bot className="w-6 h-6 text-studio-accent mt-1" />
+                        <div>
+                          <p className="text-studio-text font-medium mb-2">Question 1 of 20:</p>
+                          <p className="text-studio-muted">Why are you creating videos? What's your main motivation or goal?</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Textarea
+                        placeholder="Share your thoughts here..."
+                        rows={3}
+                        className="bg-studio-bg border-studio-border text-studio-text resize-none"
+                      />
+                    </div>
+                    
+                    <div className="flex justify-between">
+                      <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted">
+                        Skip Question
+                      </Button>
+                      <Button className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90">
+                        Next Question
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </CardContent>
         </Card>
