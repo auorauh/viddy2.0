@@ -22,8 +22,8 @@ import {
 
 const Profile = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isAiSettingsDialogOpen, setIsAiSettingsDialogOpen] = useState(false);
   const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [profile, setProfile] = useState({
     name: "Alex Johnson",
     email: "alex.johnson@example.com",
@@ -67,11 +67,11 @@ const Profile = () => {
     setIsEditDialogOpen(false);
   };
 
-  const handleAiSettingsSave = () => {
+  const handleSettingsSave = () => {
     // In a real app, this would save to a secure backend
     // For now, we'll save to localStorage (not recommended for API keys in production)
     localStorage.setItem('aiSettings', JSON.stringify(aiSettings));
-    setIsAiSettingsDialogOpen(false);
+    setIsSettingsDialogOpen(false);
   };
 
   const addPromptTemplate = () => {
@@ -508,115 +508,214 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        {/* Ask Viddy AI Settings */}
+        {/* Settings */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
               <div className="flex items-center">
-                <Bot className="w-5 h-5 mr-2" />
-                Ask Viddy Settings
+                <Settings className="w-5 h-5 mr-2" />
+                Settings
               </div>
-              <Dialog open={isAiSettingsDialogOpen} onOpenChange={setIsAiSettingsDialogOpen}>
+              <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
                     <Settings className="w-4 h-4 mr-2" />
                     Configure
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
+                <DialogContent className="bg-studio-card border-studio-border max-w-4xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle className="text-studio-text">AI Assistant Settings</DialogTitle>
+                    <DialogTitle className="text-studio-text">Settings</DialogTitle>
                     <DialogDescription className="text-studio-muted">
-                      Configure your AI preferences for Ask Viddy
+                      Manage your account settings, AI preferences, and subscription
                     </DialogDescription>
                   </DialogHeader>
                   
-                  <div className="space-y-6">
-                    {/* Security Warning */}
-                    <Alert className="border-orange-500/20 bg-orange-500/10">
-                      <AlertDescription className="text-orange-200">
-                        <strong>Security Notice:</strong> API keys are currently stored locally. For production use, we recommend connecting to Supabase for secure secret management.
-                      </AlertDescription>
-                    </Alert>
-
-                    {/* AI Model Selection */}
-                    <div>
-                      <Label htmlFor="model" className="text-studio-text">Default AI Model</Label>
-                      <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
-                        <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
-                          <SelectValue placeholder="Select AI model" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-studio-card border-studio-border">
-                          <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
-                          <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
-                          <SelectItem value="claude-3" className="text-studio-text">Claude-3</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    {/* API Key */}
-                    <div>
-                      <Label htmlFor="apiKey" className="text-studio-text">API Key</Label>
-                      <Input
-                        id="apiKey"
-                        type="password"
-                        value={aiSettings.apiKey}
-                        onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
-                        placeholder="Enter your OpenAI API key"
-                        className="bg-studio-bg border-studio-border text-studio-text"
-                      />
-                      <p className="text-xs text-studio-muted mt-1">
-                        Your API key is stored locally in your browser
-                      </p>
-                    </div>
-                    
-                    {/* Prompt Templates */}
-                    <div>
-                      <Label className="text-studio-text">Prompt Templates</Label>
-                      <div className="space-y-2 mt-2">
-                        {aiSettings.promptTemplates.map((template, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-studio-bg rounded border border-studio-border">
-                            <span className="text-studio-text text-sm flex-1">{template}</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removePromptTemplate(index)}
-                              className="text-red-400 hover:text-red-300 p-1"
-                            >
-                              <Trash2 className="w-4 h-4" />
+                  <div className="space-y-8">
+                    {/* Subscription Section */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
+                        <CreditCard className="w-5 h-5 mr-2" />
+                        Subscription
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Current Plan</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <span className="text-studio-accent font-medium">{profile.subscription}</span>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Status</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                              {profile.subscriptionStatus}
+                            </Badge>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Next Billing</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <span className="text-studio-text">{profile.nextBilling}</span>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Actions</h4>
+                          <div className="space-y-2">
+                            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              Manage Billing
                             </Button>
                           </div>
-                        ))}
-                        
-                        <div className="flex space-x-2">
-                          <Input
-                            value={newTemplate}
-                            onChange={(e) => setNewTemplate(e.target.value)}
-                            placeholder="Add new prompt template..."
-                            className="bg-studio-bg border-studio-border text-studio-text flex-1"
-                          />
-                          <Button
-                            onClick={addPromptTemplate}
-                            size="sm"
-                            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                          >
-                            Add
-                          </Button>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* AI Settings Section */}
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
+                        <Bot className="w-5 h-5 mr-2" />
+                        AI Assistant Settings
+                      </h3>
+                      
+                      {/* Security Warning */}
+                      <Alert className="border-orange-500/20 bg-orange-500/10">
+                        <AlertDescription className="text-orange-200">
+                          <strong>Security Notice:</strong> API keys are currently stored locally. For production use, we recommend connecting to Supabase for secure secret management.
+                        </AlertDescription>
+                      </Alert>
+
+                      {/* AI Model Selection */}
+                      <div>
+                        <Label htmlFor="model" className="text-studio-text">Default AI Model</Label>
+                        <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
+                          <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
+                            <SelectValue placeholder="Select AI model" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-studio-card border-studio-border">
+                            <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
+                            <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
+                            <SelectItem value="claude-3" className="text-studio-text">Claude-3</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      {/* API Key */}
+                      <div>
+                        <Label htmlFor="apiKey" className="text-studio-text">API Key</Label>
+                        <Input
+                          id="apiKey"
+                          type="password"
+                          value={aiSettings.apiKey}
+                          onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
+                          placeholder="Enter your OpenAI API key"
+                          className="bg-studio-bg border-studio-border text-studio-text"
+                        />
+                        <p className="text-xs text-studio-muted mt-1">
+                          Your API key is stored locally in your browser
+                        </p>
+                      </div>
+                      
+                      {/* Prompt Templates */}
+                      <div>
+                        <Label className="text-studio-text">Prompt Templates</Label>
+                        <div className="space-y-2 mt-2">
+                          {aiSettings.promptTemplates.map((template, index) => (
+                            <div key={index} className="flex items-center justify-between p-3 bg-studio-bg rounded border border-studio-border">
+                              <span className="text-studio-text text-sm flex-1">{template}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removePromptTemplate(index)}
+                                className="text-red-400 hover:text-red-300 p-1"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          
+                          <div className="flex space-x-2">
+                            <Input
+                              value={newTemplate}
+                              onChange={(e) => setNewTemplate(e.target.value)}
+                              placeholder="Add new prompt template..."
+                              className="bg-studio-bg border-studio-border text-studio-text flex-1"
+                            />
+                            <Button
+                              onClick={addPromptTemplate}
+                              size="sm"
+                              className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                            >
+                              Add
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Account Settings Section */}
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
+                        <User className="w-5 h-5 mr-2" />
+                        Account Settings
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Account Type</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <span className="text-studio-text">Personal</span>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Member Since</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <span className="text-studio-text">{profile.joinDate}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Actions Section */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
+                        Quick Actions
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                          <Bug className="w-4 h-4 mr-2" />
+                          Report Issue
+                        </Button>
+                        
+                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                          <HelpCircle className="w-4 h-4 mr-2" />
+                          Help Center
+                        </Button>
+                        
+                        <Button variant="outline" className="bg-studio-bg border-studio-border text-red-400 hover:bg-red-500/20">
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sign Out
+                        </Button>
                       </div>
                     </div>
                   </div>
                   
-                  <DialogFooter>
+                  <DialogFooter className="gap-2">
                     <Button
                       variant="outline"
-                      onClick={() => setIsAiSettingsDialogOpen(false)}
+                      onClick={() => setIsSettingsDialogOpen(false)}
                       className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
                     >
                       Cancel
                     </Button>
                     <Button
-                      onClick={handleAiSettingsSave}
+                      onClick={handleSettingsSave}
                       className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
                     >
                       Save Settings
@@ -627,164 +726,30 @@ const Profile = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <h4 className="font-medium text-studio-text mb-2">Current AI Model</h4>
+                <h4 className="font-medium text-studio-text mb-2">AI Model</h4>
                 <div className="p-3 bg-studio-bg rounded border border-studio-border">
                   <span className="text-studio-accent font-medium">{aiSettings.defaultModel}</span>
                 </div>
               </div>
               
               <div>
-                <h4 className="font-medium text-studio-text mb-2">Prompt Templates</h4>
+                <h4 className="font-medium text-studio-text mb-2">Subscription</h4>
                 <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <span className="text-studio-text">{aiSettings.promptTemplates.length} templates</span>
+                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                    {profile.subscription}
+                  </Badge>
                 </div>
               </div>
-            </div>
-            
-            <Alert className="border-blue-500/20 bg-blue-500/10">
-              <AlertDescription className="text-blue-200">
-                💡 <strong>Tip:</strong> Connect to Supabase for secure API key storage and enhanced AI features.
-              </AlertDescription>
-            </Alert>
-          </CardContent>
-        </Card>
-
-        {/* Settings */}
-        <Card className="bg-studio-card border-studio-border">
-          <CardHeader>
-            <CardTitle className="text-studio-text flex items-center">
-              <Settings className="w-5 h-5 mr-2" />
-              Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Account Email */}
-            <div className="space-y-3">
-              <h3 className="font-medium text-studio-text">Account</h3>
               
-              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-                <div className="flex items-center">
-                  <Mail className="w-5 h-5 mr-3 text-studio-muted" />
-                  <div>
-                    <h4 className="font-medium text-studio-text">Account Email</h4>
-                    <p className="text-sm text-studio-muted">{profile.email}</p>
-                  </div>
+              <div>
+                <h4 className="font-medium text-studio-text mb-2">Templates</h4>
+                <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                  <span className="text-studio-text">{aiSettings.promptTemplates.length} saved</span>
                 </div>
-                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                  Change Email
-                </Button>
               </div>
             </div>
-
-            {/* Support & Help */}
-            <div className="space-y-3 border-t border-studio-border pt-4">
-              <h3 className="font-medium text-studio-text">Support & Help</h3>
-              
-              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-                <div className="flex items-center">
-                  <Bug className="w-5 h-5 mr-3 text-studio-muted" />
-                  <div>
-                    <h4 className="font-medium text-studio-text">Submit a Bug</h4>
-                    <p className="text-sm text-studio-muted">Report issues or problems</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                  Report <ExternalLink className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-                <div className="flex items-center">
-                  <HelpCircle className="w-5 h-5 mr-3 text-studio-muted" />
-                  <div>
-                    <h4 className="font-medium text-studio-text">Help Center</h4>
-                    <p className="text-sm text-studio-muted">Get help and view documentation</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                  Visit <ExternalLink className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-                <div className="flex items-center">
-                  <UserPlus className="w-5 h-5 mr-3 text-studio-muted" />
-                  <div>
-                    <h4 className="font-medium text-studio-text">Invite Friends</h4>
-                    <p className="text-sm text-studio-muted">Share viddy studio with others</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                  Invite
-                </Button>
-              </div>
-            </div>
-
-            <div className="border-t border-studio-border pt-4 space-y-3">
-              <h3 className="font-medium text-studio-text">Legal & Account</h3>
-              
-              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-                <div>
-                  <h4 className="font-medium text-studio-text">Terms of Service</h4>
-                  <p className="text-sm text-studio-muted">View our terms and conditions</p>
-                </div>
-                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                  View <ExternalLink className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-                <div>
-                  <h4 className="font-medium text-studio-text">Privacy Policy</h4>
-                  <p className="text-sm text-studio-muted">How we handle your data</p>
-                </div>
-                <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text">
-                  View <ExternalLink className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-studio-bg rounded-lg border border-studio-border">
-                <div className="flex items-center">
-                  <LogOut className="w-5 h-5 mr-3 text-red-400" />
-                  <div>
-                    <h4 className="font-medium text-studio-text">Log Out</h4>
-                    <p className="text-sm text-studio-muted">Sign out of your account</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm" className="bg-studio-bg border-red-500/20 text-red-400 hover:bg-red-500/10">
-                  Log Out
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Subscription */}
-        <Card className="bg-studio-card border-studio-border">
-          <CardHeader>
-            <CardTitle className="text-studio-text flex items-center">
-              <CreditCard className="w-5 h-5 mr-2" />
-              Subscription
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-studio-muted">Plan</span>
-              <Badge className="bg-studio-accent/20 text-studio-accent">{profile.subscription}</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-studio-muted">Status</span>
-              <span className="text-green-400">{profile.subscriptionStatus}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-studio-muted">Next Billing</span>
-              <span className="text-studio-text">{profile.nextBilling}</span>
-            </div>
-            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text">
-              Manage Subscription
-            </Button>
           </CardContent>
         </Card>
         </div>
