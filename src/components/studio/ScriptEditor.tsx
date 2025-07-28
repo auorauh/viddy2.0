@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { ArrowLeft, Mail, UserPlus, Trash2, Crown, Edit, Eye } from "lucide-react";
+import { ArrowLeft, Mail, UserPlus, Trash2, Crown, Edit, Eye, CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { ScriptBoard } from "../../pages/Studio";
 
 interface ScriptEditorProps {
@@ -117,16 +120,16 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               Script
             </TabsTrigger>
             <TabsTrigger 
-              value="lists"
-              className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
-            >
-              Lists
-            </TabsTrigger>
-            <TabsTrigger 
               value="details"
               className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
             >
               Details
+            </TabsTrigger>
+            <TabsTrigger 
+              value="lists"
+              className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
+            >
+              Lists
             </TabsTrigger>
             <TabsTrigger 
               value="editing"
@@ -165,13 +168,57 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
           </TabsContent>
 
           <TabsContent value="details" className="mt-6">
-            <div className="bg-studio-card border border-border rounded-lg p-6 h-96">
-              <Textarea
-                value={details}
-                onChange={(e) => setDetails(e.target.value)}
-                placeholder="Add production details and notes..."
-                className="w-full h-full resize-none bg-transparent border-none text-studio-text text-base leading-relaxed focus:ring-0 focus:outline-none"
-              />
+            <div className="bg-studio-card border border-border rounded-lg p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="location" className="text-sm font-medium text-studio-text">Location</Label>
+                  <Input 
+                    id="location" 
+                    placeholder="Enter shooting location" 
+                    className="bg-studio-bg border-studio-border text-studio-text"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-studio-text">Shoot Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent/20"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <span>Pick a date</span>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 bg-studio-card border-studio-border" align="start">
+                      <Calendar
+                        mode="single"
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="callTime" className="text-sm font-medium text-studio-text">Call Time</Label>
+                  <Input 
+                    id="callTime" 
+                    type="time" 
+                    className="bg-studio-bg border-studio-border text-studio-text"
+                  />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="notes" className="text-sm font-medium text-studio-text">Notes</Label>
+                  <Textarea 
+                    id="notes" 
+                    placeholder="Add any additional notes or special instructions..."
+                    className="min-h-[80px] bg-studio-bg border-studio-border text-studio-text"
+                  />
+                </div>
+              </div>
             </div>
           </TabsContent>
 
