@@ -340,9 +340,9 @@ const Profile = () => {
         </Card>
 
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-studio-card border-studio-border">
+        {/* Stats - Bento Box Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6">
+          <Card className="bg-studio-card border-studio-border md:col-span-2 lg:col-span-2">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -356,7 +356,7 @@ const Profile = () => {
             </CardContent>
           </Card>
           
-          <Card className="bg-studio-card border-studio-border">
+          <Card className="bg-studio-card border-studio-border md:col-span-1 lg:col-span-2">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -370,7 +370,7 @@ const Profile = () => {
             </CardContent>
           </Card>
           
-          <Card className="bg-studio-card border-studio-border">
+          <Card className="bg-studio-card border-studio-border md:col-span-1 lg:col-span-2">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -385,7 +385,10 @@ const Profile = () => {
           </Card>
         </div>
 
-        {/* Style & Preferences */}
+        {/* Main Content - Bento Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Style & Preferences - Large */}
+          <div className="lg:col-span-8">
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
@@ -474,7 +477,11 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        {/* Team Management */}
+          </div>
+
+          {/* Side Column */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Team Management */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
@@ -668,13 +675,13 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        {/* Level & Points */}
+        {/* Challenges */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
               <div className="flex items-center">
                 <Trophy className="w-5 h-5 mr-2 text-yellow-500" />
-                Level {profile.level}
+                Challenges
               </div>
               <Dialog open={isChallengesDialogOpen} onOpenChange={setIsChallengesDialogOpen}>
                 <DialogTrigger asChild>
@@ -750,13 +757,15 @@ const Profile = () => {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-lg px-3 py-1">
+                  Level {profile.level}
+                </Badge>
+              </div>
+              <div className="flex items-center space-x-2">
                 <Zap className="w-5 h-5 text-studio-accent" />
                 <span className="text-2xl font-bold text-studio-text">{profile.points.toLocaleString()}</span>
                 <span className="text-studio-muted">points</span>
               </div>
-              <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-                Level {profile.level}
-              </Badge>
             </div>
             
             <div className="space-y-2">
@@ -775,7 +784,7 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        {/* Settings */}
+            {/* Settings */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
@@ -959,33 +968,12 @@ const Profile = () => {
               </Dialog>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">AI Model</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <span className="text-studio-accent font-medium">{aiSettings.defaultModel}</span>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">Subscription</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                    {profile.subscription}
-                  </Badge>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">Templates</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <span className="text-studio-text">{aiSettings.promptTemplates.length} saved</span>
-                </div>
-              </div>
-            </div>
+          <CardContent>
+            <p className="text-studio-muted">Configure your AI assistant, account settings, and subscription preferences.</p>
           </CardContent>
         </Card>
+          </div>
+        </div>
         </div>
       </div>
       
