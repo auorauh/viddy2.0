@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 import type { ScriptBoard } from "../../pages/Studio";
 
 interface ScriptEditorProps {
@@ -17,11 +19,14 @@ interface ScriptEditorProps {
 }
 
 export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) => {
+  const { toast } = useToast();
   const [title, setTitle] = useState(script.title);
   const [content, setContent] = useState(script.content);
   const [lists, setLists] = useState("");
   const [details, setDetails] = useState("");
   const [editing, setEditing] = useState("");
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [emailRecipient, setEmailRecipient] = useState("");
   
   // Schedule management state
   const [scheduleItems, setScheduleItems] = useState([
@@ -59,6 +64,39 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     return `${endHours.toString().padStart(2, "0")}:${endMins.toString().padStart(2, "0")}`;
   };
 
+  const shareUrl = `${window.location.origin}/shared/board/${script.id}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    toast({
+      title: "Link copied!",
+      description: "Share link has been copied to your clipboard.",
+    });
+  };
+
+  const handleEmailShare = () => {
+    if (!emailRecipient) {
+      toast({
+        title: "Email required",
+        description: "Please enter an email address to share with.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const subject = `Check out my Viddy board: ${title}`;
+    const body = `I wanted to share my Viddy board with you!\n\nBoard: ${title}\nView it here: ${shareUrl}`;
+    const mailtoUrl = `mailto:${emailRecipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    window.open(mailtoUrl, '_blank');
+    setEmailRecipient("");
+    setShareDialogOpen(false);
+    toast({
+      title: "Email opened",
+      description: "Your email client should now open with the share message.",
+    });
+  };
+
   return (
     <div className="flex-1 flex flex-col">
       {/* Header */}
@@ -82,18 +120,62 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
           </div>
           
           <div className="flex items-center space-x-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-studio-muted hover:text-studio-text"
-              onClick={() => {
-                const shareUrl = `${window.location.origin}/shared/board/${script.id}`;
-                navigator.clipboard.writeText(shareUrl);
-                // You could add a toast notification here
-              }}
-            >
-              <Share className="h-4 w-4" />
-            </Button>
+            <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-studio-muted hover:text-studio-text"
+                >
+                  <Share className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Share Board</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Send to email</Label>
+                    <div className="flex space-x-2">
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter email address"
+                        value={emailRecipient}
+                        onChange={(e) => setEmailRecipient(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button onClick={handleEmailShare} size="sm">
+                        <Mail className="h-4 w-4 mr-2" />
+                        Send
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 h-px bg-border"></div>
+                    <span className="text-xs text-muted-foreground">OR</span>
+                    <div className="flex-1 h-px bg-border"></div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Copy share link</Label>
+                    <div className="flex space-x-2">
+                      <Input
+                        value={shareUrl}
+                        readOnly
+                        className="flex-1"
+                      />
+                      <Button onClick={handleCopyLink} size="sm">
+                        <Copy className="h-4 w-4 mr-2" />
+                        Copy
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
             
             <Button
               onClick={onRecord}
