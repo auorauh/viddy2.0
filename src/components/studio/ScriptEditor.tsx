@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2 } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -81,12 +81,27 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             />
           </div>
           
-          <Button
-            onClick={onRecord}
-            className="bg-studio-record hover:bg-studio-record/90 text-white"
-          >
-            Record
-          </Button>
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-studio-muted hover:text-studio-text"
+              onClick={() => {
+                const shareUrl = `${window.location.origin}/shared/board/${script.id}`;
+                navigator.clipboard.writeText(shareUrl);
+                // You could add a toast notification here
+              }}
+            >
+              <Share className="h-4 w-4" />
+            </Button>
+            
+            <Button
+              onClick={onRecord}
+              className="bg-studio-record hover:bg-studio-record/90 text-white"
+            >
+              Record
+            </Button>
+          </div>
         </div>
       </header>
 
