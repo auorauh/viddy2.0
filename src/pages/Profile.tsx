@@ -387,8 +387,8 @@ const Profile = () => {
 
         {/* Main Content - Bento Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Style & Preferences - Large */}
-          <div className="lg:col-span-8">
+          {/* Style & Preferences - Full Width */}
+          <div className="lg:col-span-12">
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
@@ -479,8 +479,8 @@ const Profile = () => {
 
           </div>
 
-          {/* Side Column */}
-          <div className="lg:col-span-4 space-y-6">
+          {/* Team Management - Full Width */}
+          <div className="lg:col-span-12">
             {/* Team Management */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
@@ -674,20 +674,23 @@ const Profile = () => {
             </div>
           </CardContent>
         </Card>
+          </div>
 
-        {/* Challenges */}
+          {/* Bottom Row - Settings and Challenges */}
+          <div className="lg:col-span-6">
+             {/* Settings */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
               <div className="flex items-center">
-                <Trophy className="w-5 h-5 mr-2 text-yellow-500" />
-                Challenges
+                <Settings className="w-5 h-5 mr-2" />
+                Settings
               </div>
-              <Dialog open={isChallengesDialogOpen} onOpenChange={setIsChallengesDialogOpen}>
+              <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                    <Target className="w-4 h-4 mr-2" />
-                    Challenges
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configure
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-studio-card border-studio-border max-w-3xl">
@@ -784,19 +787,22 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-            {/* Settings */}
+          </div>
+          
+          <div className="lg:col-span-6">
+            {/* Challenges */}
         <Card className="bg-studio-card border-studio-border">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
               <div className="flex items-center">
-                <Settings className="w-5 h-5 mr-2" />
-                Settings
+                <Trophy className="w-5 h-5 mr-2 text-yellow-500" />
+                Challenges
               </div>
-              <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
+              <Dialog open={isChallengesDialogOpen} onOpenChange={setIsChallengesDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Configure
+                    <Target className="w-4 h-4 mr-2" />
+                    Challenges
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-studio-card border-studio-border max-w-4xl max-h-[90vh] overflow-y-auto">
