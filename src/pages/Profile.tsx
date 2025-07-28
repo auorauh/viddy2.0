@@ -799,46 +799,23 @@ const Profile = () => {
                   </DialogHeader>
                   
                   <div className="space-y-8">
-                    {/* Subscription Section */}
+                    {/* Support Section - Moved to top */}
                     <div className="space-y-4">
                       <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        <CreditCard className="w-5 h-5 mr-2" />
-                        Subscription
+                        <HelpCircle className="w-5 h-5 mr-2" />
+                        Support & Help
                       </h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Current Plan</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <span className="text-studio-accent font-medium">{profile.subscription}</span>
-                          </div>
-                        </div>
+                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                          <Bug className="w-4 h-4 mr-2" />
+                          Report Issue
+                        </Button>
                         
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Status</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                              {profile.subscriptionStatus}
-                            </Badge>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Next Billing</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <span className="text-studio-text">{profile.nextBilling}</span>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Actions</h4>
-                          <div className="space-y-2">
-                            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                              <ExternalLink className="w-4 h-4 mr-2" />
-                              Manage Billing
-                            </Button>
-                          </div>
-                        </div>
+                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                          <HelpCircle className="w-4 h-4 mr-2" />
+                          Help Center
+                        </Button>
                       </div>
                     </div>
 
@@ -886,42 +863,6 @@ const Profile = () => {
                           Your API key is stored locally in your browser
                         </p>
                       </div>
-                      
-                      {/* Prompt Templates */}
-                      <div>
-                        <Label className="text-studio-text">Prompt Templates</Label>
-                        <div className="space-y-2 mt-2">
-                          {aiSettings.promptTemplates.map((template, index) => (
-                            <div key={index} className="flex items-center justify-between p-3 bg-studio-bg rounded border border-studio-border">
-                              <span className="text-studio-text text-sm flex-1">{template}</span>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removePromptTemplate(index)}
-                                className="text-red-400 hover:text-red-300 p-1"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          ))}
-                          
-                          <div className="flex space-x-2">
-                            <Input
-                              value={newTemplate}
-                              onChange={(e) => setNewTemplate(e.target.value)}
-                              placeholder="Add new prompt template..."
-                              className="bg-studio-bg border-studio-border text-studio-text flex-1"
-                            />
-                            <Button
-                              onClick={addPromptTemplate}
-                              size="sm"
-                              className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                            >
-                              Add
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                     {/* Account Settings Section */}
@@ -946,29 +887,55 @@ const Profile = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Quick Actions Section */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        Quick Actions
-                      </h3>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                          <Bug className="w-4 h-4 mr-2" />
-                          Report Issue
-                        </Button>
-                        
-                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                          <HelpCircle className="w-4 h-4 mr-2" />
-                          Help Center
-                        </Button>
-                        
+                      <div className="pt-4">
                         <Button variant="outline" className="bg-studio-bg border-studio-border text-red-400 hover:bg-red-500/20">
                           <LogOut className="w-4 h-4 mr-2" />
                           Sign Out
                         </Button>
+                      </div>
+                    </div>
+
+                    {/* Subscription Section - Moved to bottom */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
+                        <CreditCard className="w-5 h-5 mr-2" />
+                        Subscription
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Current Plan</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <span className="text-studio-accent font-medium">{profile.subscription}</span>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Status</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                              {profile.subscriptionStatus}
+                            </Badge>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Next Billing</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <span className="text-studio-text">{profile.nextBilling}</span>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Actions</h4>
+                          <div className="space-y-2">
+                            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              Manage Billing
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
