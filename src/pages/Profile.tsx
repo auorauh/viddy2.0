@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2, Crown, Edit, Eye, Users, MessageCircleQuestion, Trophy, Star, CheckCircle2, Zap } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2, Crown, Edit, Eye, Users, MessageCircleQuestion, Trophy, Star, CheckCircle2, Zap, Upload, Image } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,6 +43,7 @@ const Profile = () => {
     uploadRate: 8,
     points: 750,
     level: 8,
+    customLogo: null as string | null,
   });
 
   // Challenge system state
@@ -90,7 +91,29 @@ const Profile = () => {
 
   const handleSave = () => {
     setProfile(editForm);
+    // Save custom logo to localStorage for persistence
+    if (editForm.customLogo) {
+      localStorage.setItem('customLogo', editForm.customLogo);
+    } else {
+      localStorage.removeItem('customLogo');
+    }
     setIsEditDialogOpen(false);
+  };
+
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setEditForm(prev => ({ ...prev, customLogo: result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    setEditForm(prev => ({ ...prev, customLogo: null }));
   };
 
   const handleSettingsSave = () => {
@@ -235,6 +258,59 @@ const Profile = () => {
                         onChange={(e) => setEditForm(prev => ({ ...prev, bio: e.target.value }))}
                         className="bg-studio-bg border-studio-border text-studio-text resize-none"
                       />
+                    </div>
+                    
+                    <div>
+                      <Label className="text-studio-text">Custom Logo</Label>
+                      <div className="space-y-3 mt-2">
+                        {editForm.customLogo ? (
+                          <div className="flex items-center space-x-3">
+                            <div className="relative">
+                              <img 
+                                src={editForm.customLogo} 
+                                alt="Custom logo preview" 
+                                className="w-20 h-12 object-contain bg-white rounded border border-studio-border"
+                              />
+                            </div>
+                            <div className="flex space-x-2">
+                              <Label htmlFor="logo-upload" className="cursor-pointer">
+                                <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted" asChild>
+                                  <span>
+                                    <Upload className="w-4 h-4 mr-2" />
+                                    Replace
+                                  </span>
+                                </Button>
+                              </Label>
+                              <Button 
+                                variant="outline" 
+                                onClick={handleRemoveLogo}
+                                className="bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <Label htmlFor="logo-upload" className="cursor-pointer">
+                            <div className="border-2 border-dashed border-studio-border rounded-lg p-6 text-center hover:border-studio-accent/50 transition-colors">
+                              <Image className="w-8 h-8 mx-auto text-studio-muted mb-2" />
+                              <p className="text-studio-text font-medium">Upload Custom Logo</p>
+                              <p className="text-sm text-studio-muted">Replace the Viddy logo with your own</p>
+                            </div>
+                          </Label>
+                        )}
+                        <input
+                          id="logo-upload"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleLogoUpload}
+                          className="hidden"
+                        />
+                        <p className="text-xs text-studio-muted">
+                          Recommended: PNG or SVG format, max 200KB. Logo will appear in the top right corner.
+                        </p>
+                      </div>
                     </div>
                   </div>
                   
