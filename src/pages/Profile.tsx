@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2, Crown, Edit, Eye, Users, MessageCircleQuestion } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2, Crown, Edit, Eye, Users, MessageCircleQuestion, Trophy, Star, CheckCircle2, Zap } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,12 +19,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Profile = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [isQuestionsDialogOpen, setIsQuestionsDialogOpen] = useState(false);
+  const [isChallengesDialogOpen, setIsChallengesDialogOpen] = useState(false);
   const [profile, setProfile] = useState({
     name: "Alex Johnson",
     email: "alex.johnson@example.com",
@@ -38,7 +41,29 @@ const Profile = () => {
     interests: ["Technology", "Lifestyle", "Education"],
     platform: "YouTube",
     uploadRate: 8,
+    points: 750,
+    level: 8,
   });
+
+  // Challenge system state
+  const [challenges, setChallenges] = useState([
+    { id: 1, title: "First Script", description: "Create your first video script", points: 10, completed: true },
+    { id: 2, title: "Record 10 Videos", description: "Complete 10 video recordings", points: 50, completed: false, progress: 7, maxProgress: 10 },
+    { id: 3, title: "Weekly Creator", description: "Upload videos 4 weeks in a row", points: 25, completed: false, progress: 2, maxProgress: 4 },
+    { id: 4, title: "Script Master", description: "Create 50 scripts", points: 100, completed: false, progress: 24, maxProgress: 50 },
+    { id: 5, title: "Team Player", description: "Invite 3 team members", points: 30, completed: false, progress: 1, maxProgress: 3 },
+    { id: 6, title: "Social Butterfly", description: "Share 20 videos on social media", points: 40, completed: true },
+    { id: 7, title: "Pro User", description: "Use Viddy for 30 days straight", points: 75, completed: false, progress: 15, maxProgress: 30 },
+    { id: 8, title: "Feedback Champion", description: "Provide feedback on 10 community videos", points: 20, completed: false, progress: 3, maxProgress: 10 },
+    { id: 9, title: "Template Creator", description: "Create 5 custom prompt templates", points: 35, completed: false, progress: 2, maxProgress: 5 },
+    { id: 10, title: "Marathon Creator", description: "Record a 60+ minute video", points: 60, completed: false }
+  ]);
+
+  // Calculate level progress
+  const getPointsForLevel = (level: number) => level * 100;
+  const getPointsForNextLevel = (currentLevel: number) => getPointsForLevel(currentLevel + 1);
+  const getCurrentLevelPoints = (points: number, level: number) => points - getPointsForLevel(level - 1);
+  const getPointsNeededForNextLevel = (points: number, level: number) => getPointsForNextLevel(level) - points;
 
   const [aiSettings, setAiSettings] = useState({
     defaultModel: "gpt-4",
@@ -235,6 +260,113 @@ const Profile = () => {
           
           <CardContent>
             <p className="text-studio-muted leading-relaxed">{profile.bio}</p>
+          </CardContent>
+        </Card>
+
+        {/* Level & Points */}
+        <Card className="bg-studio-card border-studio-border">
+          <CardHeader>
+            <CardTitle className="text-studio-text flex items-center justify-between">
+              <div className="flex items-center">
+                <Trophy className="w-5 h-5 mr-2 text-yellow-500" />
+                Level {profile.level}
+              </div>
+              <Dialog open={isChallengesDialogOpen} onOpenChange={setIsChallengesDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                    <Target className="w-4 h-4 mr-2" />
+                    Challenges
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-studio-card border-studio-border max-w-3xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-studio-text">Challenges</DialogTitle>
+                    <DialogDescription className="text-studio-muted">
+                      Complete challenges to earn points and level up!
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {challenges.map((challenge) => (
+                      <div key={challenge.id} className="flex items-start space-x-3 p-4 bg-studio-bg rounded-lg border border-studio-border">
+                        <Checkbox 
+                          checked={challenge.completed} 
+                          className="mt-1"
+                          disabled
+                        />
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h4 className={`font-medium ${challenge.completed ? 'text-green-400' : 'text-studio-text'}`}>
+                              {challenge.title}
+                            </h4>
+                            <div className="flex items-center space-x-1">
+                              <Star className="w-4 h-4 text-yellow-500" />
+                              <span className="text-sm font-medium text-studio-text">{challenge.points}</span>
+                            </div>
+                          </div>
+                          <p className="text-sm text-studio-muted">{challenge.description}</p>
+                          {challenge.progress !== undefined && challenge.maxProgress && (
+                            <div className="space-y-1">
+                              <div className="flex justify-between text-xs text-studio-muted">
+                                <span>Progress</span>
+                                <span>{challenge.progress}/{challenge.maxProgress}</span>
+                              </div>
+                              <Progress 
+                                value={(challenge.progress / challenge.maxProgress) * 100} 
+                                className="h-2"
+                              />
+                            </div>
+                          )}
+                          {challenge.completed && (
+                            <div className="flex items-center space-x-1 text-green-400 text-sm">
+                              <CheckCircle2 className="w-4 h-4" />
+                              <span>Completed!</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-6 p-4 bg-studio-bg rounded-lg border border-studio-border">
+                    <div className="text-center">
+                      <p className="text-studio-muted text-sm mb-2">
+                        Completed: {challenges.filter(c => c.completed).length}/{challenges.length}
+                      </p>
+                      <p className="text-studio-text font-medium">
+                        Total Points Earned: {challenges.filter(c => c.completed).reduce((sum, c) => sum + c.points, 0)}
+                      </p>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Zap className="w-5 h-5 text-studio-accent" />
+                <span className="text-2xl font-bold text-studio-text">{profile.points.toLocaleString()}</span>
+                <span className="text-studio-muted">points</span>
+              </div>
+              <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                Level {profile.level}
+              </Badge>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-studio-muted">
+                <span>Progress to Level {profile.level + 1}</span>
+                <span>{getPointsNeededForNextLevel(profile.points, profile.level)} points needed</span>
+              </div>
+              <Progress 
+                value={(getCurrentLevelPoints(profile.points, profile.level) / (getPointsForNextLevel(profile.level) - getPointsForLevel(profile.level - 1))) * 100}
+                className="h-3"
+              />
+              <p className="text-xs text-studio-muted text-center">
+                {getCurrentLevelPoints(profile.points, profile.level)} / {getPointsForNextLevel(profile.level) - getPointsForLevel(profile.level - 1)} points this level
+              </p>
+            </div>
           </CardContent>
         </Card>
 
