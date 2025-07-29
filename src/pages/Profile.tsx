@@ -881,41 +881,30 @@ const Profile = () => {
                     </div>
 
                     {/* Account Settings Section */}
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
                         <User className="w-5 h-5 mr-2" />
                         Account Settings
                       </h3>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Account Type</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <span className="text-studio-text">Personal</span>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Member Since</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <span className="text-studio-text">{profile.joinDate}</span>
-                          </div>
+                      <div>
+                        <h4 className="font-medium text-studio-text mb-2">Member Since</h4>
+                        <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                          <span className="text-studio-text">{profile.joinDate}</span>
                         </div>
                       </div>
                       
-                      <div className="pt-4">
-                        <Button variant="outline" className="bg-studio-bg border-studio-border text-red-400 hover:bg-red-500/20">
-                          <LogOut className="w-4 h-4 mr-2" />
-                          Sign Out
-                        </Button>
-                      </div>
+                      <Button variant="outline" className="bg-studio-bg border-studio-border text-red-400 hover:bg-red-500/20">
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Sign Out
+                      </Button>
                     </div>
 
-                    {/* Subscription Section - Moved to bottom */}
+                    {/* Membership Section */}
                     <div className="space-y-4">
                       <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
                         <CreditCard className="w-5 h-5 mr-2" />
-                        Subscription
+                        Membership
                       </h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
