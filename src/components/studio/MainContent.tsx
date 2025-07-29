@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Mic, ChevronLeft, ChevronRight, Plus, Home, User, Bot, Zap } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Plus, Home, User, Zap } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,9 +55,8 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
               <Search className="absolute left-3 top-3 h-4 w-4 text-studio-muted" />
               <Input 
                 placeholder="Search"
-                className="w-80 pl-10 bg-studio-card border-border text-studio-text"
+                className="w-80 pl-10 pr-4 bg-studio-card border-border text-studio-text"
               />
-              <Mic className="absolute right-3 top-3 h-4 w-4 text-studio-muted" />
             </div>
           </div>
           
@@ -110,10 +109,9 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-studio-muted" />
           <Input 
-            placeholder="Search"
-            className="w-full pl-10 pr-10 bg-studio-card border-border text-studio-text h-10"
+            placeholder="Search scripts..."
+            className="w-full pl-10 pr-4 bg-studio-card border-border text-studio-text h-10"
           />
-          <Mic className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-studio-muted" />
         </div>
         
         {/* Lightning bolt and pagination */}
@@ -153,18 +151,18 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </header>
 
       {/* Content */}
-      <main className="flex-1 p-4 md:p-6 overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <main className="flex-1 p-3 md:p-6 overflow-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {currentScripts.map((script) => (
             <div
               key={script.id}
-              className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border"
+              className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col"
               onClick={() => onScriptSelect(script)}
             >
-              <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3">
+              <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
                 {script.title}
               </h3>
-              <p className="text-studio-muted text-sm line-clamp-3">
+              <p className="text-studio-muted text-sm line-clamp-3 flex-1">
                 {script.content}
               </p>
             </div>
@@ -173,25 +171,25 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="border-t border-border p-6 md:p-8 mt-6 md:mt-8 safe-area-pb">
-        <div className="flex items-center justify-center space-x-6 md:space-x-8">
+      <footer className="border-t border-border p-4 md:p-8 mt-4 md:mt-8 safe-area-pb">
+        <div className="flex items-center justify-center space-x-4 md:space-x-8">
           <Button
             variant="ghost"
             size="lg"
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
-            <Home className="h-5 w-5" />
-            <span className="text-sm">Studio</span>
+            <Home className="h-4 w-4 md:h-5 md:w-5" />
+            <span className="text-xs md:text-sm">Studio</span>
           </Button>
           
           <Button
             variant="ghost"
             size="lg"
             onClick={handleNewProject}
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
-            <Plus className="h-5 w-5" />
-            <span className="text-sm">New Project</span>
+            <Plus className="h-4 w-4 md:h-5 md:w-5" />
+            <span className="text-xs md:text-sm">New Project</span>
           </Button>
 
           
@@ -199,11 +197,11 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             variant="ghost"
             size="lg"
             asChild
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
+            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
             <NavLink to="/profile">
-              <User className="h-5 w-5" />
-              <span className="text-sm">Profile</span>
+              <User className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm">Profile</span>
             </NavLink>
           </Button>
         </div>
