@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import Studio from "./pages/Studio";
 import Profile from "./pages/Profile";
 import Chatbot from "./pages/Chatbot";
+import IdeaPitch from "./pages/IdeaPitch";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Studio />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/chatbot" element={<Chatbot />} />
+            <Route path="/idea-pitch" element={<IdeaPitch />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

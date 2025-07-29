@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Mic, ChevronLeft, ChevronRight, Grid3X3, List, Plus, Home, User, Bot } from "lucide-react";
+import { Search, Mic, ChevronLeft, ChevronRight, Plus, Home, User, Bot, Zap } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,11 +20,8 @@ interface MainContentProps {
   onFolderChange: (folderId: string) => void;
 }
 
-type ViewType = 'card' | 'list';
-
 export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, onNewProject, onFolderChange }: MainContentProps) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewType, setViewType] = useState<ViewType>('card');
   const scriptsPerPage = 6;
   
   const activeFolderName = folders.find(f => f.id === activeFolder)?.name || 'All Scripts';
@@ -67,24 +64,16 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
           <h1 className="text-2xl font-bold text-studio-text absolute left-1/2 transform -translate-x-1/2">{activeFolderName}</h1>
           
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Button
-                variant={viewType === 'card' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewType('card')}
-                className="p-2"
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewType === 'list' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewType('list')}
-                className="p-2"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="p-2 text-studio-text hover:text-studio-accent"
+            >
+              <NavLink to="/idea-pitch">
+                <Zap className="h-4 w-4" />
+              </NavLink>
+            </Button>
             <div className="flex items-center space-x-2 text-studio-muted">
               <Button 
                 variant="ghost" 
@@ -127,26 +116,18 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
           <Mic className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-studio-muted" />
         </div>
         
-        {/* View modes and pagination */}
+        {/* Lightning bolt and pagination */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-1">
-            <Button
-              variant={viewType === 'card' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewType('card')}
-              className="h-8 w-8 p-0"
-            >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewType === 'list' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewType('list')}
-              className="h-8 w-8 p-0"
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild
+            className="h-8 w-8 p-0 text-studio-text hover:text-studio-accent"
+          >
+            <NavLink to="/idea-pitch">
+              <Zap className="h-4 w-4" />
+            </NavLink>
+          </Button>
           <div className="flex items-center space-x-1 text-studio-muted">
             <Button 
               variant="ghost" 
@@ -173,46 +154,22 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
 
       {/* Content */}
       <main className="flex-1 p-4 md:p-6 overflow-auto">
-        {viewType === 'card' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {currentScripts.map((script) => (
-              <div
-                key={script.id}
-                className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border"
-                onClick={() => onScriptSelect(script)}
-              >
-                <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3">
-                  {script.title}
-                </h3>
-                <p className="text-studio-muted text-sm line-clamp-3">
-                  {script.content}
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {currentScripts.map((script) => (
-              <div
-                key={script.id}
-                className="bg-studio-card rounded-lg p-3 md:p-4 cursor-pointer hover:bg-accent transition-colors border border-border flex items-center justify-between"
-                onClick={() => onScriptSelect(script)}
-              >
-                <div className="flex-1">
-                  <h3 className="text-base md:text-lg font-semibold text-studio-text mb-1">
-                    {script.title}
-                  </h3>
-                  <p className="text-studio-muted text-sm line-clamp-1">
-                    {script.content}
-                  </p>
-                </div>
-                <div className="text-xs text-studio-muted ml-2 md:ml-4">
-                  {script.createdAt.toLocaleDateString()}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {currentScripts.map((script) => (
+            <div
+              key={script.id}
+              className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border"
+              onClick={() => onScriptSelect(script)}
+            >
+              <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3">
+                {script.title}
+              </h3>
+              <p className="text-studio-muted text-sm line-clamp-3">
+                {script.content}
+              </p>
+            </div>
+          ))}
+        </div>
       </main>
 
       {/* Bottom Navigation */}
