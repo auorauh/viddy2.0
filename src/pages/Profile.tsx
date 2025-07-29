@@ -399,55 +399,106 @@ const Profile = () => {
               <Dialog open={isQuestionsDialogOpen} onOpenChange={setIsQuestionsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90">
-                    <MessageCircleQuestion className="w-4 h-4 mr-2" />
-                    Play 20 Questions
+                    <Target className="w-4 h-4 mr-2" />
+                    Topics
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="text-studio-text">Play 20 Questions with Viddy</DialogTitle>
+                    <DialogTitle className="text-studio-text">Choose Your Channel Topics</DialogTitle>
                     <DialogDescription className="text-studio-muted">
-                      Let Viddy ask you 20 questions to get to know you better and help come up with personalized video ideas.
+                      Select the topics that best represent your channel content to help personalize your video ideas.
                     </DialogDescription>
                   </DialogHeader>
                   
                   <div className="space-y-4">
-                    <div className="p-4 bg-studio-bg rounded-lg border border-studio-border">
-                      <div className="flex items-start space-x-3">
-                        <Bot className="w-6 h-6 text-studio-accent mt-1" />
-                        <div>
-                          <p className="text-studio-text font-medium mb-2">Hi! I'm excited to learn more about you.</p>
-                          <p className="text-studio-muted">I'll ask you 20 questions to understand your interests, goals, and style. This will help me suggest personalized video ideas that match your unique perspective.</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {[
+                        "Technology", "Gaming", "Lifestyle", "Education", "Entertainment", "Music",
+                        "Sports", "Travel", "Food", "Fashion", "Health & Fitness", "DIY & Crafts",
+                        "Business", "Finance", "Science", "Art", "Comedy", "News & Politics"
+                      ].map((topic) => (
+                        <div key={topic} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={topic}
+                            checked={profile.interests.includes(topic)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setProfile(prev => ({
+                                  ...prev,
+                                  interests: [...prev.interests, topic]
+                                }));
+                              } else {
+                                setProfile(prev => ({
+                                  ...prev,
+                                  interests: prev.interests.filter(i => i !== topic)
+                                }));
+                              }
+                            }}
+                          />
+                          <Label htmlFor={topic} className="text-studio-text text-sm">
+                            {topic}
+                          </Label>
                         </div>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 bg-studio-bg rounded-lg border border-studio-border">
-                      <div className="flex items-start space-x-3">
-                        <Bot className="w-6 h-6 text-studio-accent mt-1" />
-                        <div>
-                          <p className="text-studio-text font-medium mb-2">Question 1 of 20:</p>
-                          <p className="text-studio-muted">Why are you creating videos? What's your main motivation or goal?</p>
-                        </div>
-                      </div>
+                      ))}
                     </div>
                     
                     <div className="space-y-2">
-                      <Textarea
-                        placeholder="Share your thoughts here..."
-                        rows={3}
-                        className="bg-studio-bg border-studio-border text-studio-text resize-none"
-                      />
+                      <Label className="text-studio-text">Custom Topic</Label>
+                      <div className="flex space-x-2">
+                        <Input
+                          placeholder="Add a custom topic..."
+                          className="bg-studio-bg border-studio-border text-studio-text flex-1"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              const value = e.currentTarget.value.trim();
+                              if (value && !profile.interests.includes(value)) {
+                                setProfile(prev => ({
+                                  ...prev,
+                                  interests: [...prev.interests, value]
+                                }));
+                                e.currentTarget.value = '';
+                              }
+                            }
+                          }}
+                        />
+                        <Button 
+                          variant="outline" 
+                          className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
+                          onClick={(e) => {
+                            const input = e.currentTarget.parentElement?.querySelector('input');
+                            if (input) {
+                              const value = input.value.trim();
+                              if (value && !profile.interests.includes(value)) {
+                                setProfile(prev => ({
+                                  ...prev,
+                                  interests: [...prev.interests, value]
+                                }));
+                                input.value = '';
+                              }
+                            }
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </div>
                     </div>
-                    
-                    <div className="flex justify-between">
-                      <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted">
-                        Skip Question
-                      </Button>
-                      <Button className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90">
-                        Next Question
-                      </Button>
-                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsQuestionsDialogOpen(false)}
+                      className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => setIsQuestionsDialogOpen(false)}
+                      className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                    >
+                      Save Topics
+                    </Button>
                   </div>
                 </DialogContent>
               </Dialog>
@@ -999,17 +1050,6 @@ const Profile = () => {
             </NavLink>
           </Button>
 
-          <Button
-            variant="ghost"
-            size="lg"
-            asChild
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
-          >
-            <NavLink to="/chatbot">
-              <Bot className="h-5 w-5 md:h-6 md:w-6" />
-              <span className="text-xs md:text-sm">Ask Viddy</span>
-            </NavLink>
-          </Button>
           
           <Button
             variant="ghost"
