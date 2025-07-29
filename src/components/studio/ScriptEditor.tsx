@@ -288,6 +288,28 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-studio-text">First Export</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent/20"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <span>Pick a date</span>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 bg-studio-card border-studio-border" align="start">
+                      <Calendar
+                        mode="single"
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="notes" className="text-sm font-medium text-studio-text">Notes</Label>
                   <Textarea 
