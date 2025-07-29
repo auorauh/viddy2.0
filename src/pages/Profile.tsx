@@ -385,155 +385,12 @@ const Profile = () => {
           </Card>
         </div>
 
-        {/* Main Content - Bento Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Style & Preferences - Full Width */}
-          <div className="lg:col-span-12">
-        <Card className="bg-studio-card border-studio-border">
-          <CardHeader>
-            <CardTitle className="text-studio-text flex items-center justify-between">
-              <div className="flex items-center">
-                <Target className="w-5 h-5 mr-2" />
-                Style & Preferences
-              </div>
-              <Dialog open={isQuestionsDialogOpen} onOpenChange={setIsQuestionsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90">
-                    <Target className="w-4 h-4 mr-2" />
-                    Topics
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-studio-text">Choose Your Channel Topics</DialogTitle>
-                    <DialogDescription className="text-studio-muted">
-                      Select the topics that best represent your channel content to help personalize your video ideas.
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {[
-                        "Technology", "Gaming", "Lifestyle", "Education", "Entertainment", "Music",
-                        "Sports", "Travel", "Food", "Fashion", "Health & Fitness", "DIY & Crafts",
-                        "Business", "Finance", "Science", "Art", "Comedy", "News & Politics"
-                      ].map((topic) => (
-                        <div key={topic} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={topic}
-                            checked={profile.interests.includes(topic)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setProfile(prev => ({
-                                  ...prev,
-                                  interests: [...prev.interests, topic]
-                                }));
-                              } else {
-                                setProfile(prev => ({
-                                  ...prev,
-                                  interests: prev.interests.filter(i => i !== topic)
-                                }));
-                              }
-                            }}
-                          />
-                          <Label htmlFor={topic} className="text-studio-text text-sm">
-                            {topic}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label className="text-studio-text">Custom Topic</Label>
-                      <div className="flex space-x-2">
-                        <Input
-                          placeholder="Add a custom topic..."
-                          className="bg-studio-bg border-studio-border text-studio-text flex-1"
-                          onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                              const value = e.currentTarget.value.trim();
-                              if (value && !profile.interests.includes(value)) {
-                                setProfile(prev => ({
-                                  ...prev,
-                                  interests: [...prev.interests, value]
-                                }));
-                                e.currentTarget.value = '';
-                              }
-                            }
-                          }}
-                        />
-                        <Button 
-                          variant="outline" 
-                          className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
-                          onClick={(e) => {
-                            const input = e.currentTarget.parentElement?.querySelector('input');
-                            if (input) {
-                              const value = input.value.trim();
-                              if (value && !profile.interests.includes(value)) {
-                                setProfile(prev => ({
-                                  ...prev,
-                                  interests: [...prev.interests, value]
-                                }));
-                                input.value = '';
-                              }
-                            }
-                          }}
-                        >
-                          Add
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-end space-x-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsQuestionsDialogOpen(false)}
-                      className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => setIsQuestionsDialogOpen(false)}
-                      className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                    >
-                      Save Topics
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-medium text-studio-text mb-3">Topics of Interest</h4>
-                <div className="flex flex-wrap gap-2">
-                  {profile.interests.map((interest, index) => (
-                    <Badge key={index} variant="secondary" className="bg-studio-accent/20 text-studio-accent">
-                      {interest}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-studio-text mb-3">Primary Platform</h4>
-                <div className="flex items-center space-x-2">
-                  <Youtube className="w-5 h-5 text-red-500" />
-                  <span className="text-studio-text font-medium">{profile.platform}</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Bento Box Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-          </div>
-
-          {/* Team Management - Full Width */}
-          <div className="lg:col-span-12">
-            {/* Team Management */}
-        <Card className="bg-studio-card border-studio-border">
+          {/* Team Management - Large Card */}
+          <div className="md:col-span-2 lg:col-span-3">
+            <Card className="bg-studio-card border-studio-border h-full">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
               <div className="flex items-center">
@@ -727,122 +584,11 @@ const Profile = () => {
         </Card>
           </div>
 
-          {/* Bottom Row - Settings and Challenges */}
-          <div className="lg:col-span-6">
-             {/* Challenges */}
-        <Card className="bg-studio-card border-studio-border">
-          <CardHeader>
-            <CardTitle className="text-studio-text flex items-center justify-between">
-              <div className="flex items-center">
-                <Trophy className="w-5 h-5 mr-2 text-yellow-500" />
-                Challenges
-              </div>
-              <Dialog open={isChallengesDialogOpen} onOpenChange={setIsChallengesDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                    <Target className="w-4 h-4 mr-2" />
-                    Challenges
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-studio-card border-studio-border max-w-3xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-studio-text">Challenges</DialogTitle>
-                    <DialogDescription className="text-studio-muted">
-                      Complete challenges to earn points and level up!
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="space-y-4 max-h-96 overflow-y-auto">
-                    {challenges.map((challenge) => (
-                      <div key={challenge.id} className="flex items-start space-x-3 p-4 bg-studio-bg rounded-lg border border-studio-border">
-                        <Checkbox 
-                          checked={challenge.completed} 
-                          className="mt-1"
-                          disabled
-                        />
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <h4 className={`font-medium ${challenge.completed ? 'text-green-400' : 'text-studio-text'}`}>
-                              {challenge.title}
-                            </h4>
-                            <div className="flex items-center space-x-1">
-                              <Star className="w-4 h-4 text-yellow-500" />
-                              <span className="text-sm font-medium text-studio-text">{challenge.points}</span>
-                            </div>
-                          </div>
-                          <p className="text-sm text-studio-muted">{challenge.description}</p>
-                          {challenge.progress !== undefined && challenge.maxProgress && (
-                            <div className="space-y-1">
-                              <div className="flex justify-between text-xs text-studio-muted">
-                                <span>Progress</span>
-                                <span>{challenge.progress}/{challenge.maxProgress}</span>
-                              </div>
-                              <Progress 
-                                value={(challenge.progress / challenge.maxProgress) * 100} 
-                                className="h-2"
-                              />
-                            </div>
-                          )}
-                          {challenge.completed && (
-                            <div className="flex items-center space-x-1 text-green-400 text-sm">
-                              <CheckCircle2 className="w-4 h-4" />
-                              <span>Completed!</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-6 p-4 bg-studio-bg rounded-lg border border-studio-border">
-                    <div className="text-center">
-                      <p className="text-studio-muted text-sm mb-2">
-                        Completed: {challenges.filter(c => c.completed).length}/{challenges.length}
-                      </p>
-                      <p className="text-studio-text font-medium">
-                        Total Points Earned: {challenges.filter(c => c.completed).reduce((sum, c) => sum + c.points, 0)}
-                      </p>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-lg px-3 py-1">
-                  Level {profile.level}
-                </Badge>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Zap className="w-5 h-5 text-studio-accent" />
-                <span className="text-2xl font-bold text-studio-text">{profile.points.toLocaleString()}</span>
-                <span className="text-studio-muted">points</span>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm text-studio-muted">
-                <span>Progress to Level {profile.level + 1}</span>
-                <span>{getPointsNeededForNextLevel(profile.points, profile.level)} points needed</span>
-              </div>
-              <Progress 
-                value={(getCurrentLevelPoints(profile.points, profile.level) / (getPointsForNextLevel(profile.level) - getPointsForLevel(profile.level - 1))) * 100}
-                className="h-3"
-              />
-              <p className="text-xs text-studio-muted text-center">
-                {getCurrentLevelPoints(profile.points, profile.level)} / {getPointsForNextLevel(profile.level) - getPointsForLevel(profile.level - 1)} points this level
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-          </div>
           
-          <div className="lg:col-span-6">
+          {/* Settings - Tall Card */}
+          <div className="md:col-span-2 lg:col-span-1">
             {/* Challenges */}
-        <Card className="bg-studio-card border-studio-border">
+            <Card className="bg-studio-card border-studio-border h-full">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
               <div className="flex items-center">
@@ -1033,7 +779,30 @@ const Profile = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-studio-muted">Configure your AI assistant, account settings, and subscription preferences.</p>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium text-studio-text mb-2">Subscription</h4>
+                <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                  <span className="text-studio-accent font-medium">{profile.subscription}</span>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-studio-text mb-2">Account Status</h4>
+                <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                    {profile.subscriptionStatus}
+                  </Badge>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-studio-text mb-2">Next Billing</h4>
+                <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                  <span className="text-studio-text text-sm">{profile.nextBilling}</span>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
           </div>
