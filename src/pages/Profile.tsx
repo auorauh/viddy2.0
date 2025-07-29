@@ -865,97 +865,41 @@ const Profile = () => {
                   </DialogHeader>
                   
                   <div className="space-y-8">
-                    {/* Support Section - Moved to top */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        <HelpCircle className="w-5 h-5 mr-2" />
-                        Support & Help
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                          <Bug className="w-4 h-4 mr-2" />
-                          Report Issue
-                        </Button>
-                        
-                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                          <HelpCircle className="w-4 h-4 mr-2" />
-                          Help Center
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* AI Settings Section */}
-                    <div className="space-y-6">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        <Bot className="w-5 h-5 mr-2" />
-                        AI Assistant Settings
-                      </h3>
-                      
-                      {/* Security Warning */}
-                      <Alert className="border-orange-500/20 bg-orange-500/10">
-                        <AlertDescription className="text-orange-200">
-                          <strong>Security Notice:</strong> API keys are currently stored locally. For production use, we recommend connecting to Supabase for secure secret management.
-                        </AlertDescription>
-                      </Alert>
-
-                      {/* AI Model Selection */}
-                      <div>
-                        <Label htmlFor="model" className="text-studio-text">Default AI Model</Label>
-                        <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
-                          <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
-                            <SelectValue placeholder="Select AI model" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-studio-card border-studio-border">
-                            <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
-                            <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
-                            <SelectItem value="claude-3" className="text-studio-text">Claude-3</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      {/* API Key */}
-                      <div>
-                        <Label htmlFor="apiKey" className="text-studio-text">API Key</Label>
-                        <Input
-                          id="apiKey"
-                          type="password"
-                          value={aiSettings.apiKey}
-                          onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
-                          placeholder="Enter your OpenAI API key"
-                          className="bg-studio-bg border-studio-border text-studio-text"
-                        />
-                        <p className="text-xs text-studio-muted mt-1">
-                          Your API key is stored locally in your browser
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Account Settings Section */}
+                    {/* Account Information - Top Section */}
                     <div className="space-y-4">
                       <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
                         <User className="w-5 h-5 mr-2" />
-                        Account Settings
+                        Account Information
                       </h3>
                       
-                      <div>
-                        <h4 className="font-medium text-studio-text mb-2">Member Since</h4>
-                        <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                          <span className="text-studio-text">{profile.joinDate}</span>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Member Since</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <div className="flex items-center space-x-2">
+                              <Calendar className="w-4 h-4 text-studio-accent" />
+                              <span className="text-studio-text font-medium">{profile.joinDate}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-studio-text mb-2">Account Email</h4>
+                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
+                            <div className="flex items-center space-x-2">
+                              <Mail className="w-4 h-4 text-studio-accent" />
+                              <span className="text-studio-text">{profile.email}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      
-                      <Button variant="outline" className="bg-studio-bg border-studio-border text-red-400 hover:bg-red-500/20">
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sign Out
-                      </Button>
                     </div>
 
                     {/* Membership Section */}
                     <div className="space-y-4">
                       <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
                         <CreditCard className="w-5 h-5 mr-2" />
-                        Membership
+                        Membership & Billing
                       </h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -983,15 +927,89 @@ const Profile = () => {
                         </div>
                         
                         <div>
-                          <h4 className="font-medium text-studio-text mb-2">Actions</h4>
-                          <div className="space-y-2">
-                            <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                              <ExternalLink className="w-4 h-4 mr-2" />
-                              Manage Billing
-                            </Button>
-                          </div>
+                          <h4 className="font-medium text-studio-text mb-2">Billing Actions</h4>
+                          <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Manage Billing
+                          </Button>
                         </div>
                       </div>
+                    </div>
+
+                    {/* AI Settings Section */}
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
+                        <Bot className="w-5 h-5 mr-2" />
+                        AI Assistant Settings
+                      </h3>
+                      
+                      {/* Security Warning */}
+                      <Alert className="border-orange-500/20 bg-orange-500/10">
+                        <AlertDescription className="text-orange-200">
+                          <strong>Security Notice:</strong> API keys are currently stored locally. For production use, we recommend connecting to Supabase for secure secret management.
+                        </AlertDescription>
+                      </Alert>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* AI Model Selection */}
+                        <div>
+                          <Label htmlFor="model" className="text-studio-text">Default AI Model</Label>
+                          <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
+                            <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
+                              <SelectValue placeholder="Select AI model" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-studio-card border-studio-border">
+                              <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
+                              <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
+                              <SelectItem value="claude-3" className="text-studio-text">Claude-3</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        {/* API Key */}
+                        <div>
+                          <Label htmlFor="apiKey" className="text-studio-text">API Key</Label>
+                          <Input
+                            id="apiKey"
+                            type="password"
+                            value={aiSettings.apiKey}
+                            onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
+                            placeholder="Enter your OpenAI API key"
+                            className="bg-studio-bg border-studio-border text-studio-text"
+                          />
+                          <p className="text-xs text-studio-muted mt-1">
+                            Your API key is stored locally in your browser
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Support Section */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
+                        <HelpCircle className="w-5 h-5 mr-2" />
+                        Support & Help
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                          <Bug className="w-4 h-4 mr-2" />
+                          Report Issue
+                        </Button>
+                        
+                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
+                          <HelpCircle className="w-4 h-4 mr-2" />
+                          Help Center
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Sign Out - Bottom Section */}
+                    <div className="pt-6 border-t border-studio-border">
+                      <Button variant="outline" className="w-full bg-studio-bg border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50">
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Sign Out
+                      </Button>
                     </div>
                   </div>
                   
