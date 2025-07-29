@@ -194,17 +194,6 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             <span className="text-sm">New Project</span>
           </Button>
 
-          <Button
-            variant="ghost"
-            size="lg"
-            asChild
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-4 px-6"
-          >
-            <NavLink to="/chatbot">
-              <Bot className="h-5 w-5" />
-              <span className="text-sm">Ask Viddy</span>
-            </NavLink>
-          </Button>
           
           <Button
             variant="ghost"
