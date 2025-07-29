@@ -386,10 +386,10 @@ const Profile = () => {
         </div>
 
         {/* Bento Box Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          {/* Team Management - Large Card */}
-          <div className="md:col-span-2 lg:col-span-3">
+          {/* Team Management - Equal Width Card */}
+          <div className="md:col-span-1">
             <Card className="bg-studio-card border-studio-border h-full">
           <CardHeader>
             <CardTitle className="text-studio-text flex items-center justify-between">
@@ -585,8 +585,8 @@ const Profile = () => {
           </div>
 
           
-          {/* Settings - Tall Card */}
-          <div className="md:col-span-2 lg:col-span-1">
+          {/* Settings - Equal Width Card */}
+          <div className="md:col-span-1">
             {/* Challenges */}
             <Card className="bg-studio-card border-studio-border h-full">
           <CardHeader>
