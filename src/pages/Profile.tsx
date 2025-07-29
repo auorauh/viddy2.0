@@ -386,426 +386,298 @@ const Profile = () => {
         </div>
 
         {/* Bento Box Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
 
-          {/* Team Management - Equal Width Card */}
-          <div className="md:col-span-1">
-            <Card className="bg-studio-card border-studio-border h-full">
-          <CardHeader>
-            <CardTitle className="text-studio-text flex items-center justify-between">
-              <div className="flex items-center">
-                <Users className="w-5 h-5 mr-2" />
-                Team Management
-              </div>
-              <Dialog open={isTeamDialogOpen} onOpenChange={setIsTeamDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                    <Users className="w-4 h-4 mr-2" />
-                    Team
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-studio-card border-studio-border max-w-3xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-studio-text">Team Management</DialogTitle>
-                    <DialogDescription className="text-studio-muted">
-                      Invite team members and manage their roles
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="space-y-6 max-h-96 overflow-y-auto">
-                    {/* Invite Section */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center">
-                        <UserPlus className="w-5 h-5 mr-2" />
-                        Invite Team Members
-                      </h3>
-                      
-                      <div className="flex gap-3">
-                        <div className="flex-1">
+          {/* Team Management */}
+          <Card className="bg-studio-card border-studio-border">
+            <CardHeader>
+              <CardTitle className="text-studio-text flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Users className="w-5 h-5" />
+                  Team Management
+                </div>
+                <Dialog open={isTeamDialogOpen} onOpenChange={setIsTeamDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Manage
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle className="text-studio-text">Team Management</DialogTitle>
+                      <DialogDescription className="text-studio-muted">
+                        Manage your team members and their permissions.
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                      {/* Invite new member */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-studio-text">Invite Team Member</h3>
+                        <div className="flex space-x-2">
                           <Input
-                            type="email"
                             placeholder="Enter email address"
                             value={inviteEmail}
                             onChange={(e) => setInviteEmail(e.target.value)}
-                            className="bg-studio-bg border-studio-border text-studio-text"
+                            className="bg-studio-bg border-studio-border text-studio-text flex-1"
                           />
-                        </div>
-                        
-                        <Select value={inviteRole} onValueChange={(value: "owner" | "editor" | "viewer") => setInviteRole(value)}>
-                          <SelectTrigger className="w-32 bg-studio-bg border-studio-border text-studio-text">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-studio-card border-studio-border">
-                            <SelectItem value="owner" className="text-studio-text hover:bg-studio-accent/20">
-                              <div className="flex items-center">
-                                <Crown className="w-4 h-4 mr-2" />
-                                Owner
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="editor" className="text-studio-text hover:bg-studio-accent/20">
-                              <div className="flex items-center">
-                                <Edit className="w-4 h-4 mr-2" />
-                                Editor
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="viewer" className="text-studio-text hover:bg-studio-accent/20">
-                              <div className="flex items-center">
-                                <Eye className="w-4 h-4 mr-2" />
-                                Viewer
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        
-                        <Button 
-                          onClick={handleInviteMember}
-                          disabled={!inviteEmail}
-                          className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
-                        >
-                          <Mail className="w-4 h-4 mr-2" />
-                          Invite
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Team Members List */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-studio-text">Team Members ({teamMembers.length})</h3>
-                      
-                      <div className="space-y-3">
-                        {teamMembers.map((member) => (
-                          <div key={member.id} className="flex items-center justify-between p-3 bg-studio-bg border border-studio-border rounded-lg">
-                            <div className="flex items-center space-x-3">
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage src={member.avatar} alt={member.name} />
-                                <AvatarFallback className="bg-studio-accent/20 text-studio-accent text-sm">
-                                  {member.name.split(" ").map(n => n[0]).join("").toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              
-                              <div className="flex flex-col">
-                                <span className="text-studio-text font-medium">{member.name}</span>
-                                <span className="text-studio-muted text-sm">{member.email}</span>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center space-x-3">
-                              <Badge className={`${getRoleBadgeVariant(member.role)} border`}>
-                                <div className="flex items-center">
-                                  {getRoleIcon(member.role)}
-                                  <span className="ml-1 capitalize">{member.role}</span>
-                                </div>
-                              </Badge>
-                              
-                              {member.role !== "owner" && (
-                                <div className="flex items-center space-x-2">
-                                  <Select value={member.role} onValueChange={(value: "owner" | "editor" | "viewer") => handleRoleChange(member.id, value)}>
-                                    <SelectTrigger className="w-24 h-8 bg-studio-bg border-studio-border text-studio-text text-xs">
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-studio-card border-studio-border">
-                                      <SelectItem value="owner" className="text-studio-text hover:bg-studio-accent/20 text-xs">Owner</SelectItem>
-                                      <SelectItem value="editor" className="text-studio-text hover:bg-studio-accent/20 text-xs">Editor</SelectItem>
-                                      <SelectItem value="viewer" className="text-studio-text hover:bg-studio-accent/20 text-xs">Viewer</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleRemoveMember(member.id)}
-                                    className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Role Descriptions */}
-                    <div className="mt-6 p-4 bg-studio-bg border border-studio-border rounded-lg">
-                      <h4 className="text-sm font-medium text-studio-text mb-3">Role Permissions</h4>
-                      <div className="space-y-2 text-xs text-studio-muted">
-                        <div className="flex items-center">
-                          <Crown className="w-3 h-3 mr-2 text-yellow-400" />
-                          <span className="font-medium text-yellow-400">Owner:</span>
-                          <span className="ml-2">Full access to all features and settings</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Edit className="w-3 h-3 mr-2 text-blue-400" />
-                          <span className="font-medium text-blue-400">Editor:</span>
-                          <span className="ml-2">Can edit scripts and manage content</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Eye className="w-3 h-3 mr-2 text-gray-400" />
-                          <span className="font-medium text-gray-400">Viewer:</span>
-                          <span className="ml-2">Can view and comment on scripts</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <DialogFooter>
-                    <Button
-                      onClick={() => setIsTeamDialogOpen(false)}
-                      className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                    >
-                      Done
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">Team Size</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <span className="text-studio-accent font-medium">{teamMembers.length} members</span>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">Your Role</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <div className="flex items-center">
-                    <Crown className="w-4 h-4 mr-2 text-yellow-400" />
-                    <span className="text-yellow-400 font-medium">Owner</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-          </div>
-
-          
-          {/* Settings - Equal Width Card */}
-          <div className="md:col-span-1">
-            {/* Challenges */}
-            <Card className="bg-studio-card border-studio-border h-full">
-          <CardHeader>
-            <CardTitle className="text-studio-text flex items-center justify-between">
-              <div className="flex items-center">
-                <Settings className="w-5 h-5 mr-2" />
-                Settings
-              </div>
-              <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Configure
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-studio-card border-studio-border max-w-4xl max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="text-studio-text">Settings</DialogTitle>
-                    <DialogDescription className="text-studio-muted">
-                      Manage your account settings, AI preferences, and subscription
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="space-y-8">
-                    {/* Account Information - Top Section */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        <User className="w-5 h-5 mr-2" />
-                        Account Information
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Member Since</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <div className="flex items-center space-x-2">
-                              <Calendar className="w-4 h-4 text-studio-accent" />
-                              <span className="text-studio-text font-medium">{profile.joinDate}</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Account Email</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <div className="flex items-center space-x-2">
-                              <Mail className="w-4 h-4 text-studio-accent" />
-                              <span className="text-studio-text">{profile.email}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Membership Section */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        <CreditCard className="w-5 h-5 mr-2" />
-                        Membership & Billing
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Current Plan</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <span className="text-studio-accent font-medium">{profile.subscription}</span>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Status</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                              {profile.subscriptionStatus}
-                            </Badge>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Next Billing</h4>
-                          <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                            <span className="text-studio-text">{profile.nextBilling}</span>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-medium text-studio-text mb-2">Billing Actions</h4>
-                          <Button variant="outline" size="sm" className="w-full bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            Manage Billing
+                          <Select value={inviteRole} onValueChange={(value: "owner" | "editor" | "viewer") => setInviteRole(value)}>
+                            <SelectTrigger className="w-32 bg-studio-bg border-studio-border text-studio-text">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-studio-card border-studio-border">
+                              <SelectItem value="viewer" className="text-studio-text">Viewer</SelectItem>
+                              <SelectItem value="editor" className="text-studio-text">Editor</SelectItem>
+                              <SelectItem value="owner" className="text-studio-text">Owner</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Button 
+                            onClick={handleInviteMember}
+                            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                          >
+                            <UserPlus className="w-4 h-4 mr-2" />
+                            Invite
                           </Button>
                         </div>
                       </div>
-                    </div>
-
-                    {/* AI Settings Section */}
-                    <div className="space-y-6">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        <Bot className="w-5 h-5 mr-2" />
-                        AI Assistant Settings
-                      </h3>
                       
-                      {/* Security Warning */}
-                      <Alert className="border-orange-500/20 bg-orange-500/10">
-                        <AlertDescription className="text-orange-200">
-                          <strong>Security Notice:</strong> API keys are currently stored locally. For production use, we recommend connecting to Supabase for secure secret management.
-                        </AlertDescription>
-                      </Alert>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* AI Model Selection */}
-                        <div>
-                          <Label htmlFor="model" className="text-studio-text">Default AI Model</Label>
-                          <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
-                            <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
-                              <SelectValue placeholder="Select AI model" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-studio-card border-studio-border">
-                              <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
-                              <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
-                              <SelectItem value="claude-3" className="text-studio-text">Claude-3</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        {/* API Key */}
-                        <div>
-                          <Label htmlFor="apiKey" className="text-studio-text">API Key</Label>
-                          <Input
-                            id="apiKey"
-                            type="password"
-                            value={aiSettings.apiKey}
-                            onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
-                            placeholder="Enter your OpenAI API key"
-                            className="bg-studio-bg border-studio-border text-studio-text"
-                          />
-                          <p className="text-xs text-studio-muted mt-1">
-                            Your API key is stored locally in your browser
-                          </p>
+                      {/* Current team members */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-studio-text">Team Members</h3>
+                        <div className="space-y-3">
+                          {teamMembers.map((member) => (
+                            <div key={member.id} className="flex items-center justify-between p-3 bg-studio-bg rounded-lg border border-studio-border">
+                              <div className="flex items-center space-x-3">
+                                <Avatar className="w-8 h-8">
+                                  <AvatarFallback className="bg-studio-accent text-studio-bg text-sm">
+                                    {member.name.split(' ').map(n => n[0]).join('')}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium text-studio-text">{member.name}</p>
+                                  <p className="text-sm text-studio-muted">{member.email}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Badge className={`${getRoleBadgeVariant(member.role)} border`}>
+                                  <span className="flex items-center space-x-1">
+                                    {getRoleIcon(member.role)}
+                                    <span className="capitalize">{member.role}</span>
+                                  </span>
+                                </Badge>
+                                <Select 
+                                  value={member.role} 
+                                  onValueChange={(value: "owner" | "editor" | "viewer") => handleRoleChange(member.id, value)}
+                                >
+                                  <SelectTrigger className="w-20 h-8 bg-studio-card border-studio-border text-studio-text">
+                                    <ChevronDown className="w-3 h-3" />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-studio-card border-studio-border">
+                                    <SelectItem value="viewer" className="text-studio-text">Viewer</SelectItem>
+                                    <SelectItem value="editor" className="text-studio-text">Editor</SelectItem>
+                                    <SelectItem value="owner" className="text-studio-text">Owner</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                {member.role !== "owner" && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleRemoveMember(member.id)}
+                                    className="h-8 w-8 p-0 bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
-
-                    {/* Support Section */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-studio-text flex items-center border-b border-studio-border pb-2">
-                        <HelpCircle className="w-5 h-5 mr-2" />
-                        Support & Help
-                      </h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                          <Bug className="w-4 h-4 mr-2" />
-                          Report Issue
-                        </Button>
-                        
-                        <Button variant="outline" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg">
-                          <HelpCircle className="w-4 h-4 mr-2" />
-                          Help Center
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Sign Out - Bottom Section */}
-                    <div className="pt-6 border-t border-studio-border">
-                      <Button variant="outline" className="w-full bg-studio-bg border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50">
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sign Out
+                    
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsTeamDialogOpen(false)}
+                        className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
+                      >
+                        Close
                       </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-studio-muted">Team Members</span>
+                  <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
+                    {teamMembers.length} members
+                  </Badge>
+                </div>
+                
+                <div className="space-y-2">
+                  {teamMembers.slice(0, 3).map((member) => (
+                    <div key={member.id} className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Avatar className="w-6 h-6">
+                          <AvatarFallback className="bg-studio-accent text-studio-bg text-xs">
+                            {member.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-studio-text text-sm">{member.name}</span>
+                      </div>
+                      <Badge className={`${getRoleBadgeVariant(member.role)} border text-xs`}>
+                        <span className="flex items-center space-x-1">
+                          {getRoleIcon(member.role)}
+                          <span className="capitalize">{member.role}</span>
+                        </span>
+                      </Badge>
                     </div>
-                  </div>
-                  
-                  <DialogFooter className="gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsSettingsDialogOpen(false)}
-                      className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleSettingsSave}
-                      className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                    >
-                      Save Settings
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">Subscription</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <span className="text-studio-accent font-medium">{profile.subscription}</span>
+                  ))}
+                  {teamMembers.length > 3 && (
+                    <p className="text-xs text-studio-muted">
+                      +{teamMembers.length - 3} more members
+                    </p>
+                  )}
                 </div>
               </div>
-              
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">Account Status</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                    {profile.subscriptionStatus}
+            </CardContent>
+          </Card>
+
+          {/* Settings */}
+          <Card className="bg-studio-card border-studio-border">
+            <CardHeader>
+              <CardTitle className="text-studio-text flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Settings className="w-5 h-5" />
+                  Settings
+                </div>
+                <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Configure
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle className="text-studio-text">AI & Prompt Settings</DialogTitle>
+                      <DialogDescription className="text-studio-muted">
+                        Configure your AI preferences and custom prompt templates.
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                      {/* AI Model Selection */}
+                      <div className="space-y-2">
+                        <Label htmlFor="ai-model" className="text-studio-text">Default AI Model</Label>
+                        <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
+                          <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-studio-card border-studio-border">
+                            <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
+                            <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
+                            <SelectItem value="claude-3" className="text-studio-text">Claude 3</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      {/* Custom API Key */}
+                      <div className="space-y-2">
+                        <Label htmlFor="api-key" className="text-studio-text">Custom API Key (Optional)</Label>
+                        <Input
+                          id="api-key"
+                          type="password"
+                          placeholder="Enter your custom API key"
+                          value={aiSettings.apiKey}
+                          onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
+                          className="bg-studio-bg border-studio-border text-studio-text"
+                        />
+                        <p className="text-xs text-studio-muted">
+                          Use your own API key to avoid usage limits and get faster responses.
+                        </p>
+                      </div>
+                      
+                      {/* Prompt Templates */}
+                      <div className="space-y-4">
+                        <Label className="text-studio-text">Custom Prompt Templates</Label>
+                        
+                        {/* Add new template */}
+                        <div className="flex space-x-2">
+                          <Input
+                            placeholder="Create a new prompt template..."
+                            value={newTemplate}
+                            onChange={(e) => setNewTemplate(e.target.value)}
+                            className="bg-studio-bg border-studio-border text-studio-text flex-1"
+                          />
+                          <Button 
+                            onClick={addPromptTemplate}
+                            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add
+                          </Button>
+                        </div>
+                        
+                        {/* Existing templates */}
+                        <div className="space-y-2 max-h-40 overflow-y-auto">
+                          {aiSettings.promptTemplates.map((template, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 bg-studio-bg rounded border border-studio-border">
+                              <span className="text-studio-text text-sm">{template}</span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => removePromptTemplate(index)}
+                                className="h-6 w-6 p-0 bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsSettingsDialogOpen(false)}
+                        className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleSettingsSave}
+                        className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                      >
+                        Save Settings
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-studio-muted">AI Model</span>
+                  <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
+                    {aiSettings.defaultModel}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-studio-muted">Prompt Templates</span>
+                  <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
+                    {aiSettings.promptTemplates.length} templates
                   </Badge>
                 </div>
               </div>
-              
-              <div>
-                <h4 className="font-medium text-studio-text mb-2">Next Billing</h4>
-                <div className="p-3 bg-studio-bg rounded border border-studio-border">
-                  <span className="text-studio-text text-sm">{profile.nextBilling}</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-          </div>
+            </CardContent>
+          </Card>
         </div>
         </div>
       </div>
