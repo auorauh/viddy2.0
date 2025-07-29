@@ -99,7 +99,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </header>
 
       {/* Mobile Header */}
-      <header className="p-4 space-y-3 border-b border-border md:hidden">
+      <header className="px-4 py-3 space-y-3 border-b border-border md:hidden">
         {/* Folder name */}
         <div className="text-center">
           <h2 className="text-lg font-semibold text-studio-text">{activeFolderName}</h2>
@@ -151,27 +151,29 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </header>
 
       {/* Content */}
-      <main className="flex-1 p-3 md:p-6 overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-          {currentScripts.map((script) => (
-            <div
-              key={script.id}
-              className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col"
-              onClick={() => onScriptSelect(script)}
-            >
-              <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
-                {script.title}
-              </h3>
-              <p className="text-studio-muted text-sm line-clamp-3 flex-1">
-                {script.content}
-              </p>
-            </div>
-          ))}
+      <main className="flex-1 px-4 py-3 md:p-6 overflow-auto">
+        <div className="max-w-full mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center sm:justify-items-stretch">
+            {currentScripts.map((script) => (
+              <div
+                key={script.id}
+                className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col w-full max-w-sm sm:max-w-none"
+                onClick={() => onScriptSelect(script)}
+              >
+                <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
+                  {script.title}
+                </h3>
+                <p className="text-studio-muted text-sm line-clamp-3 flex-1">
+                  {script.content}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="border-t border-border p-4 md:p-8 mt-4 md:mt-8 safe-area-pb">
+      <footer className="border-t border-border px-4 py-3 md:p-8 mt-4 md:mt-8 safe-area-pb">
         <div className="flex items-center justify-center space-x-4 md:space-x-8">
           <Button
             variant="ghost"
