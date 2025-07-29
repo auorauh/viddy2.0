@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail, FileText, Download, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -43,6 +43,14 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   ]);
   const [newShotItem, setNewShotItem] = useState("");
   const [newGearItem, setNewGearItem] = useState("");
+  
+  // Editor Guides state
+  const [editorGuides, setEditorGuides] = useState<{
+    id: string;
+    partName: string;
+    versions: { fileName: string; uploadDate: Date }[];
+  }[]>([]);
+  const [editorNotes, setEditorNotes] = useState("");
   
   // Schedule management state
   const [scheduleItems, setScheduleItems] = useState([
@@ -154,6 +162,53 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
   const handleRemoveGearItem = (id: string) => {
     setGearList(prev => prev.filter(item => item.id !== id));
+  };
+
+  // Editor Guides management functions
+  const handlePartNameChange = (partId: string, newName: string) => {
+    setEditorGuides(prev => prev.map(part => 
+      part.id === partId ? { ...part, partName: newName } : part
+    ));
+  };
+
+  const handleRemovePart = (partId: string) => {
+    setEditorGuides(prev => prev.filter(part => part.id !== partId));
+  };
+
+  const handleAddVersion = (partId: string) => {
+    setEditorGuides(prev => prev.map(part => 
+      part.id === partId 
+        ? { 
+            ...part, 
+            versions: [...part.versions, { 
+              fileName: `Editor_Guide_${part.partName}_v${part.versions.length + 1}.pdf`, 
+              uploadDate: new Date() 
+            }] 
+          }
+        : part
+    ));
+  };
+
+  const handleRemoveVersion = (partId: string, versionIndex: number) => {
+    setEditorGuides(prev => prev.map(part => 
+      part.id === partId 
+        ? { 
+            ...part, 
+            versions: part.versions.filter((_, index) => index !== versionIndex) 
+          }
+        : part
+    ));
+  };
+
+  const handleDownloadGuide = (partId: string, versionIndex: number) => {
+    const part = editorGuides.find(p => p.id === partId);
+    if (part && part.versions[versionIndex]) {
+      toast({
+        title: "Download started",
+        description: `Downloading ${part.versions[versionIndex].fileName}`,
+      });
+      // In a real app, this would trigger an actual file download
+    }
   };
 
   return (
@@ -475,13 +530,106 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
           </TabsContent>
 
           <TabsContent value="editing" className="mt-6">
-            <div className="bg-studio-card border border-border rounded-lg p-6 h-96">
-              <Textarea
-                value={editing}
-                onChange={(e) => setEditing(e.target.value)}
-                placeholder="Add post-production editing notes..."
-                className="w-full h-full resize-none bg-transparent border-none text-studio-text text-base leading-relaxed focus:ring-0 focus:outline-none"
-              />
+            <div className="space-y-6">
+              {/* Editor Guides Section */}
+              <div className="bg-studio-card border border-border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-studio-text">Editor Guides</h3>
+                  <Button
+                    onClick={() => {
+                      const newPart = `Part ${editorGuides.length + 1}`;
+                      setEditorGuides(prev => [...prev, {
+                        id: Date.now().toString(),
+                        partName: newPart,
+                        versions: []
+                      }]);
+                    }}
+                    size="sm"
+                    className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Part
+                  </Button>
+                </div>
+
+                {/* Parts organized left to right, versions top to bottom */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {editorGuides.map((part) => (
+                    <div key={part.id} className="bg-studio-bg border border-studio-border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <Input
+                          value={part.partName}
+                          onChange={(e) => handlePartNameChange(part.id, e.target.value)}
+                          className="text-sm font-medium bg-transparent border-none text-studio-text p-0 h-auto focus:ring-0"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemovePart(part.id)}
+                          className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+
+                      {/* Versions stacked vertically */}
+                      <div className="space-y-2">
+                        {part.versions.map((version, versionIndex) => (
+                          <div key={versionIndex} className="flex items-center space-x-2 p-2 bg-studio-card border border-studio-border rounded">
+                            <FileText className="w-4 h-4 text-studio-accent" />
+                            <span className="text-xs text-studio-text flex-1">v{versionIndex + 1}</span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDownloadGuide(part.id, versionIndex)}
+                              className="h-6 w-6 p-0 text-studio-accent hover:bg-studio-accent/20"
+                            >
+                              <Download className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveVersion(part.id, versionIndex)}
+                              className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ))}
+                        
+                        <Button
+                          onClick={() => handleAddVersion(part.id)}
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-dashed border-studio-border text-studio-muted hover:text-studio-text hover:border-studio-accent"
+                        >
+                          <Plus className="w-3 h-3 mr-1" />
+                          Add Version
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {editorGuides.length === 0 && (
+                    <div className="col-span-full text-center py-8 text-studio-muted">
+                      <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p>No editor guides yet</p>
+                      <p className="text-sm">Click "Add Part" to create your first guide</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Editor Notes Section */}
+              <div className="bg-studio-card border border-border rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-studio-text mb-4">Editor Notes</h3>
+                <Textarea
+                  value={editorNotes}
+                  onChange={(e) => setEditorNotes(e.target.value)}
+                  placeholder="Add notes for the editor after shooting your video..."
+                  className="w-full h-48 resize-none bg-studio-bg border-studio-border text-studio-text text-base leading-relaxed"
+                />
+              </div>
             </div>
           </TabsContent>
 
