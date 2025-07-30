@@ -157,15 +157,31 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             {currentScripts.map((script) => (
               <div
                 key={script.id}
-                className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col w-full max-w-sm sm:max-w-none"
+                className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[200px] md:min-h-[240px] flex flex-col w-full max-w-sm sm:max-w-none"
                 onClick={() => onScriptSelect(script)}
               >
-                <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
+                <h3 className="text-base md:text-lg font-semibold text-studio-text mb-3 md:mb-4 line-clamp-2">
                   {script.title}
                 </h3>
-                <p className="text-studio-muted text-sm line-clamp-3 flex-1">
-                  {script.content}
-                </p>
+                <div className="flex-1 space-y-2 overflow-hidden">
+                  {script.content.split('\n').filter(line => line.trim()).slice(0, 3).map((point, index) => (
+                    <div key={index} className="bg-background/50 rounded-md p-2 border border-border/50">
+                      <div className="flex items-start space-x-2">
+                        <span className="text-xs font-semibold text-studio-accent bg-studio-accent/20 rounded px-1.5 py-0.5 mt-0.5">
+                          {index + 1}
+                        </span>
+                        <p className="text-studio-muted text-xs line-clamp-2 flex-1">
+                          {point.trim()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                  {script.content.split('\n').filter(line => line.trim()).length > 3 && (
+                    <div className="text-xs text-studio-muted/70 text-center pt-1">
+                      +{script.content.split('\n').filter(line => line.trim()).length - 3} more points
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
