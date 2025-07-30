@@ -338,13 +338,24 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
           </TabsList>
 
           <TabsContent value="script" className="mt-6 h-full">
-            <div className="bg-studio-card border border-border rounded-lg p-6 h-96">
-              <Textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Start writing your script..."
-                className="w-full h-full resize-none bg-transparent border-none text-studio-text text-base leading-relaxed focus:ring-0 focus:outline-none"
-              />
+            <div className="bg-studio-card border border-border rounded-lg p-6 h-96 overflow-y-auto">
+              <div className="space-y-3">
+                {content.split('\n').filter(line => line.trim()).map((line, index) => (
+                  <div key={index} className="flex items-start space-x-3 group">
+                    <span className="text-studio-accent font-medium text-sm mt-1 min-w-[20px]">
+                      {index + 1}.
+                    </span>
+                    <p className="text-studio-text text-base leading-relaxed flex-1">
+                      {line.trim()}
+                    </p>
+                  </div>
+                ))}
+                {(!content || content.trim() === '') && (
+                  <div className="text-studio-muted text-base italic">
+                    No script content yet. Add content to see numbered talking points.
+                  </div>
+                )}
+              </div>
             </div>
           </TabsContent>
 
