@@ -341,17 +341,17 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             <div className="bg-studio-card border border-border rounded-lg p-6 h-96 overflow-y-auto">
               <div className="space-y-3">
                 {content.split('\n').filter(line => line.trim()).map((line, index) => (
-                  <div key={index} className="flex items-start space-x-3 group">
-                    <span className="text-studio-accent font-medium text-sm mt-1 min-w-[20px]">
-                      {index + 1}.
+                  <div key={index} className="bg-black/40 rounded-lg p-4 flex items-start space-x-4">
+                    <span className="text-white font-bold text-lg min-w-[24px]">
+                      {index + 1}
                     </span>
-                    <p className="text-studio-text text-base leading-relaxed flex-1">
+                    <p className="text-white text-base leading-relaxed flex-1">
                       {line.trim()}
                     </p>
                   </div>
                 ))}
                 {(!content || content.trim() === '') && (
-                  <div className="text-studio-muted text-base italic">
+                  <div className="text-studio-muted text-base italic text-center py-8">
                     No script content yet. Add content to see numbered talking points.
                   </div>
                 )}
