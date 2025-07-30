@@ -23,6 +23,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   const { toast } = useToast();
   const [title, setTitle] = useState(script.title);
   const [content, setContent] = useState(script.content);
+  const [newPoint, setNewPoint] = useState("");
   const [lists, setLists] = useState("");
   const [details, setDetails] = useState("");
   const [editing, setEditing] = useState("");
@@ -119,6 +120,22 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
       title: "Email opened",
       description: "Your email client should now open with the share message.",
     });
+  };
+
+  // Script point management
+  const handleAddPoint = () => {
+    if (newPoint.trim()) {
+      const updatedContent = content ? `${content}\n${newPoint.trim()}` : newPoint.trim();
+      setContent(updatedContent);
+      setNewPoint("");
+    }
+  };
+
+  const handlePointKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleAddPoint();
+    }
   };
 
   // List management functions
@@ -337,24 +354,47 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="script" className="mt-6 h-full">
-            <div className="bg-studio-card border border-border rounded-lg p-6 h-96 overflow-y-auto">
-              <div className="space-y-3">
-                {content.split('\n').filter(line => line.trim()).map((line, index) => (
-                  <div key={index} className="bg-black/40 rounded-lg p-4 flex items-start space-x-4">
-                    <span className="text-white font-bold text-lg min-w-[24px]">
-                      {index + 1}
-                    </span>
-                    <p className="text-white text-base leading-relaxed flex-1">
-                      {line.trim()}
-                    </p>
-                  </div>
-                ))}
-                {(!content || content.trim() === '') && (
-                  <div className="text-studio-muted text-base italic text-center py-8">
-                    No script content yet. Add content to see numbered talking points.
-                  </div>
-                )}
+          <TabsContent value="script" className="mt-6 h-full flex flex-col">
+            <div className="bg-studio-card border border-border rounded-lg flex-1 flex flex-col">
+              {/* Script Points */}
+              <div className="p-6 flex-1 overflow-y-auto">
+                <div className="space-y-3">
+                  {content.split('\n').filter(line => line.trim()).map((line, index) => (
+                    <div key={index} className="bg-black/40 rounded-lg p-4 flex items-start space-x-4">
+                      <span className="text-white font-bold text-lg min-w-[24px]">
+                        {index + 1}
+                      </span>
+                      <p className="text-white text-base leading-relaxed flex-1">
+                        {line.trim()}
+                      </p>
+                    </div>
+                  ))}
+                  {(!content || content.trim() === '') && (
+                    <div className="text-studio-muted text-base italic text-center py-8">
+                      No script content yet. Add content to see numbered talking points.
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Typing Bar */}
+              <div className="p-4 border-t border-border bg-black/20">
+                <div className="flex space-x-3">
+                  <Input
+                    value={newPoint}
+                    onChange={(e) => setNewPoint(e.target.value)}
+                    onKeyDown={handlePointKeyPress}
+                    placeholder="Enter Point Text..."
+                    className="flex-1 bg-black/40 border-studio-border text-white placeholder:text-studio-muted"
+                  />
+                  <Button
+                    onClick={handleAddPoint}
+                    disabled={!newPoint.trim()}
+                    className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg px-6"
+                  >
+                    Add Point
+                  </Button>
+                </div>
               </div>
             </div>
           </TabsContent>
