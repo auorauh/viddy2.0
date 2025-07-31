@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail, FileText, Download, X } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail, FileText, Download, X, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,8 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   const [editing, setEditing] = useState("");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [emailRecipient, setEmailRecipient] = useState("");
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importText, setImportText] = useState("");
   
   // Shot List and Gear List state
   const [shotList, setShotList] = useState([
@@ -135,6 +137,30 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleAddPoint();
+    }
+  };
+
+  // Script import functionality
+  const handleImportScript = () => {
+    if (importText.trim()) {
+      // Split the text into lines and filter out empty lines
+      const lines = importText.split('\n').filter(line => line.trim());
+      
+      // Format each line as a bullet point and join them
+      const formattedContent = lines.map(line => line.trim()).join('\n');
+      
+      // Add to existing content or replace it
+      const updatedContent = content ? `${content}\n${formattedContent}` : formattedContent;
+      setContent(updatedContent);
+      
+      // Clear import text and close dialog
+      setImportText("");
+      setImportDialogOpen(false);
+      
+      toast({
+        title: "Script imported!",
+        description: `Successfully imported ${lines.length} talking points.`,
+      });
     }
   };
 
@@ -380,13 +406,67 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               {/* Typing Bar */}
               <div className="p-4 border-t border-border bg-black/20">
                 <div className="flex space-x-3">
-                  <Input
-                    value={newPoint}
-                    onChange={(e) => setNewPoint(e.target.value)}
-                    onKeyDown={handlePointKeyPress}
-                    placeholder="Enter Point Text..."
-                    className="flex-1 bg-black/40 border-studio-border text-white placeholder:text-studio-muted"
-                  />
+                  <div className="flex space-x-2 flex-1">
+                    <Input
+                      value={newPoint}
+                      onChange={(e) => setNewPoint(e.target.value)}
+                      onKeyDown={handlePointKeyPress}
+                      placeholder="Enter Point Text..."
+                      className="flex-1 bg-black/40 border-studio-border text-white placeholder:text-studio-muted"
+                    />
+                    <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-10 w-10 p-0 bg-studio-accent/20 hover:bg-studio-accent/30 border border-studio-accent/30 rounded-full"
+                          title="Import Script"
+                        >
+                          <div className="relative">
+                            <div className="w-6 h-6 rounded-full bg-studio-accent/10 flex items-center justify-center">
+                              <Plus className="h-3 w-3 text-studio-accent" />
+                            </div>
+                          </div>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Import Script</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="import-script">Paste your script content</Label>
+                            <Textarea
+                              id="import-script"
+                              value={importText}
+                              onChange={(e) => setImportText(e.target.value)}
+                              placeholder="Paste your script here. Each line will become a numbered talking point..."
+                              className="min-h-[200px] resize-none"
+                            />
+                          </div>
+                          
+                          <div className="flex space-x-2 justify-end">
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setImportText("");
+                                setImportDialogOpen(false);
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              onClick={handleImportScript}
+                              disabled={!importText.trim()}
+                              className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
+                            >
+                              Import
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                   <Button
                     onClick={handleAddPoint}
                     disabled={!newPoint.trim()}
@@ -805,6 +885,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
           </TabsContent>
         </Tabs>
       </div>
+
     </div>
   );
 };
