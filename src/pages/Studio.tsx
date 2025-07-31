@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MainContent } from "@/components/studio/MainContent";
 import { ScriptEditor } from "@/components/studio/ScriptEditor";
+import { CameraSync } from "@/components/studio/CameraSync";
 import { TeleprompterMode } from "@/components/studio/TeleprompterMode";
 
 export interface ScriptBoard {
@@ -12,7 +13,7 @@ export interface ScriptBoard {
   updatedAt: Date;
 }
 
-export type ViewMode = 'boards' | 'editor' | 'teleprompter';
+export type ViewMode = 'boards' | 'editor' | 'camera-sync' | 'teleprompter';
 
 const Studio = () => {
   const [scripts, setScripts] = useState<ScriptBoard[]>([
@@ -64,6 +65,10 @@ const Studio = () => {
   };
 
   const handleRecord = () => {
+    setViewMode('camera-sync');
+  };
+
+  const handleCameraSync = () => {
     setViewMode('teleprompter');
   };
 
@@ -106,6 +111,13 @@ const Studio = () => {
           script={activeScript}
           onRecord={handleRecord}
           onBack={handleBackToBoards}
+        />
+      )}
+      
+      {viewMode === 'camera-sync' && activeScript && (
+        <CameraSync 
+          onSync={handleCameraSync}
+          onBack={handleBackToEditor}
         />
       )}
       
