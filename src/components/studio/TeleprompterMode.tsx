@@ -36,15 +36,13 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
     }
   }, [recordingState, countdown]);
 
-  // Recording timer
+  // Recording timer - starts immediately when component mounts
   useEffect(() => {
-    if (recordingState === 'recording') {
-      const timer = setInterval(() => {
-        setRecordingTime(prev => prev + 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [recordingState]);
+    const timer = setInterval(() => {
+      setRecordingTime(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleStartRecording = () => {
     setCountdown(3);
@@ -84,7 +82,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   return (
     <div className="flex-1 flex flex-col bg-black">
       {/* Recording Header */}
-      <header className="bg-studio-record px-6 py-3 flex items-center justify-between text-white">
+      <header className="bg-studio-record px-6 py-3 flex items-center text-white relative">
         <div className="flex items-center space-x-4">
           <span className="text-sm font-mono">
             {String(currentPoint + 1).padStart(2, '0')}/{String(scriptPoints.length).padStart(2, '0')}
@@ -98,9 +96,13 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
           </div>
         </div>
         
+        {/* Centered Timer */}
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <span className="text-lg font-mono font-bold">{formatTime(recordingTime)}</span>
+        </div>
+        
         <div className="flex items-center space-x-4">
           <span className="text-sm">View Script</span>
-          <span className="text-sm font-mono">{formatTime(recordingTime)}</span>
           <span className="text-sm">Recording mode</span>
           <Button
             variant="ghost"
