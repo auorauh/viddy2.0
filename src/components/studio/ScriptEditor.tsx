@@ -423,7 +423,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center"
+                        className="h-10 w-10 p-0 bg-black hover:bg-black/80 border border-white rounded-lg flex items-center justify-center"
                         title="Import Script"
                       >
                         <Plus className="h-4 w-4 text-white" />
