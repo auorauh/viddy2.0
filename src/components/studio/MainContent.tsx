@@ -60,7 +60,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             </div>
           </div>
           
-          <h1 className="text-2xl font-bold text-studio-text absolute left-1/2 transform -translate-x-1/2">{activeFolderName}</h1>
+          <div className="absolute left-1/2 transform -translate-x-1/2"></div>
           
            <div className="flex items-center space-x-4">
              <div className="flex items-center space-x-2 text-studio-muted">
@@ -92,7 +92,6 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       <header className="px-4 py-3 space-y-3 border-b border-border md:hidden">
         {/* Folder name */}
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-studio-text">{activeFolderName}</h2>
         </div>
         
         {/* Search bar */}
