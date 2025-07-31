@@ -423,7 +423,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-10 w-10 p-0 bg-studio-accent hover:bg-studio-accent/90 border-2 border-studio-accent rounded-lg flex items-center justify-center"
+                        className="h-10 w-10 p-0 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center"
                         title="Import Script"
                       >
                         <Plus className="h-4 w-4 text-white" />
@@ -487,14 +487,6 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                     placeholder="Enter Point Text..."
                     className="flex-1 bg-black/40 border-studio-border text-white placeholder:text-studio-muted"
                   />
-                  
-                  <Button
-                    onClick={handleAddPoint}
-                    disabled={!newPoint.trim()}
-                    className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg px-6"
-                  >
-                    Add Point
-                  </Button>
                 </div>
               </div>
             </div>
