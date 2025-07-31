@@ -25,7 +25,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 const Profile = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false);
-  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  
   const [isQuestionsDialogOpen, setIsQuestionsDialogOpen] = useState(false);
   const [isChallengesDialogOpen, setIsChallengesDialogOpen] = useState(false);
   const [profile, setProfile] = useState({
@@ -66,17 +66,6 @@ const Profile = () => {
   const getCurrentLevelPoints = (points: number, level: number) => points - getPointsForLevel(level - 1);
   const getPointsNeededForNextLevel = (points: number, level: number) => getPointsForNextLevel(level) - points;
 
-  const [aiSettings, setAiSettings] = useState({
-    defaultModel: "gpt-4",
-    apiKey: "",
-    promptTemplates: [
-      "Create a YouTube video script about [topic]",
-      "Generate engaging social media captions for [content]",
-      "Write a tutorial outline for [subject]"
-    ]
-  });
-
-  const [newTemplate, setNewTemplate] = useState("");
 
   // Team management state
   const [inviteEmail, setInviteEmail] = useState("");
@@ -116,29 +105,6 @@ const Profile = () => {
     setEditForm(prev => ({ ...prev, customLogo: null }));
   };
 
-  const handleSettingsSave = () => {
-    // In a real app, this would save to a secure backend
-    // For now, we'll save to localStorage (not recommended for API keys in production)
-    localStorage.setItem('aiSettings', JSON.stringify(aiSettings));
-    setIsSettingsDialogOpen(false);
-  };
-
-  const addPromptTemplate = () => {
-    if (newTemplate.trim()) {
-      setAiSettings(prev => ({
-        ...prev,
-        promptTemplates: [...prev.promptTemplates, newTemplate.trim()]
-      }));
-      setNewTemplate("");
-    }
-  };
-
-  const removePromptTemplate = (index: number) => {
-    setAiSettings(prev => ({
-      ...prev,
-      promptTemplates: prev.promptTemplates.filter((_, i) => i !== index)
-    }));
-  };
 
   const handleInviteMember = () => {
     if (inviteEmail && inviteRole) {
@@ -550,131 +516,52 @@ const Profile = () => {
           {/* Settings */}
           <Card className="bg-studio-card border-studio-border">
             <CardHeader>
-              <CardTitle className="text-studio-text flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Settings className="w-5 h-5" />
-                  Settings
-                </div>
-                <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Configure
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle className="text-studio-text">AI & Prompt Settings</DialogTitle>
-                      <DialogDescription className="text-studio-muted">
-                        Configure your AI preferences and custom prompt templates.
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="space-y-6">
-                      {/* AI Model Selection */}
-                      <div className="space-y-2">
-                        <Label htmlFor="ai-model" className="text-studio-text">Default AI Model</Label>
-                        <Select value={aiSettings.defaultModel} onValueChange={(value) => setAiSettings(prev => ({ ...prev, defaultModel: value }))}>
-                          <SelectTrigger className="bg-studio-bg border-studio-border text-studio-text">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-studio-card border-studio-border">
-                            <SelectItem value="gpt-4" className="text-studio-text">GPT-4 (Recommended)</SelectItem>
-                            <SelectItem value="gpt-3.5-turbo" className="text-studio-text">GPT-3.5 Turbo</SelectItem>
-                            <SelectItem value="claude-3" className="text-studio-text">Claude 3</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      {/* Custom API Key */}
-                      <div className="space-y-2">
-                        <Label htmlFor="api-key" className="text-studio-text">Custom API Key (Optional)</Label>
-                        <Input
-                          id="api-key"
-                          type="password"
-                          placeholder="Enter your custom API key"
-                          value={aiSettings.apiKey}
-                          onChange={(e) => setAiSettings(prev => ({ ...prev, apiKey: e.target.value }))}
-                          className="bg-studio-bg border-studio-border text-studio-text"
-                        />
-                        <p className="text-xs text-studio-muted">
-                          Use your own API key to avoid usage limits and get faster responses.
-                        </p>
-                      </div>
-                      
-                      {/* Prompt Templates */}
-                      <div className="space-y-4">
-                        <Label className="text-studio-text">Custom Prompt Templates</Label>
-                        
-                        {/* Add new template */}
-                        <div className="flex space-x-2">
-                          <Input
-                            placeholder="Create a new prompt template..."
-                            value={newTemplate}
-                            onChange={(e) => setNewTemplate(e.target.value)}
-                            className="bg-studio-bg border-studio-border text-studio-text flex-1"
-                          />
-                          <Button 
-                            onClick={addPromptTemplate}
-                            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                          >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add
-                          </Button>
-                        </div>
-                        
-                        {/* Existing templates */}
-                        <div className="space-y-2 max-h-40 overflow-y-auto">
-                          {aiSettings.promptTemplates.map((template, index) => (
-                            <div key={index} className="flex items-center justify-between p-2 bg-studio-bg rounded border border-studio-border">
-                              <span className="text-studio-text text-sm">{template}</span>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => removePromptTemplate(index)}
-                                className="h-6 w-6 p-0 bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsSettingsDialogOpen(false)}
-                        className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleSettingsSave}
-                        className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                      >
-                        Save Settings
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+              <CardTitle className="text-studio-text flex items-center space-x-2">
+                <Settings className="w-5 h-5" />
+                <span>Settings</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-studio-muted">AI Model</span>
-                  <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
-                    {aiSettings.defaultModel}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-studio-muted">Prompt Templates</span>
-                  <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
-                    {aiSettings.promptTemplates.length} templates
-                  </Badge>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  <span>Terms of Service</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                >
+                  <CreditCard className="w-5 h-5" />
+                  <span>Memberships</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  <span>Privacy Policy</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                >
+                  <Bug className="w-5 h-5" />
+                  <span>Submit a Bug</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto md:col-span-2"
+                >
+                  <UserPlus className="w-5 h-5" />
+                  <span>Apply to be a Beta Tester</span>
+                </Button>
               </div>
             </CardContent>
           </Card>
