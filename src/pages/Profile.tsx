@@ -536,7 +536,7 @@ const Profile = () => {
                   className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
                 >
                   <CreditCard className="w-5 h-5" />
-                  <span>Memberships</span>
+                  <span>Membership info</span>
                 </Button>
                 
                 <Button
@@ -551,16 +551,40 @@ const Profile = () => {
                   variant="outline"
                   className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
                 >
+                  <HelpCircle className="w-5 h-5" />
+                  <span>Help Center</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                >
+                  <MessageCircleQuestion className="w-5 h-5" />
+                  <span>Contact</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                >
                   <Bug className="w-5 h-5" />
                   <span>Submit a Bug</span>
                 </Button>
                 
                 <Button
                   variant="outline"
-                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto md:col-span-2"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
                 >
                   <UserPlus className="w-5 h-5" />
                   <span>Apply to be a Beta Tester</span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto md:col-span-2"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Sign out</span>
                 </Button>
               </div>
             </CardContent>
