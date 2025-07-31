@@ -382,12 +382,6 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               Details
             </TabsTrigger>
             <TabsTrigger 
-              value="lists"
-              className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
-            >
-              Lists
-            </TabsTrigger>
-            <TabsTrigger 
               value="editing"
               className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
             >
@@ -501,109 +495,6 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             </div>
           </TabsContent>
 
-          <TabsContent value="lists" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Shot List */}
-              <div className="bg-studio-card border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-studio-text">Shot List</h3>
-                  <Badge variant="outline" className="bg-studio-accent/20 text-studio-accent border-studio-accent/30">
-                    {shotList.filter(item => item.checked).length}/{shotList.length}
-                  </Badge>
-                </div>
-                
-                <div className="space-y-3 max-h-64 overflow-y-auto mb-4">
-                  {shotList.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-3 group">
-                      <Checkbox
-                        checked={item.checked}
-                        onCheckedChange={() => handleShotListCheck(item.id)}
-                        className="data-[state=checked]:bg-studio-accent data-[state=checked]:border-studio-accent"
-                      />
-                      <span className={`flex-1 ${item.checked ? 'line-through text-studio-muted' : 'text-studio-text'}`}>
-                        {item.text}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemoveShotItem(item.id)}
-                        className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="flex space-x-2">
-                  <Input
-                    value={newShotItem}
-                    onChange={(e) => setNewShotItem(e.target.value)}
-                    placeholder="Add new shot..."
-                    className="bg-studio-bg border-studio-border text-studio-text"
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddShotItem()}
-                  />
-                  <Button
-                    onClick={handleAddShotItem}
-                    size="sm"
-                    className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Gear List */}
-              <div className="bg-studio-card border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-studio-text">Gear List</h3>
-                  <Badge variant="outline" className="bg-studio-accent/20 text-studio-accent border-studio-accent/30">
-                    {gearList.filter(item => item.checked).length}/{gearList.length}
-                  </Badge>
-                </div>
-                
-                <div className="space-y-3 max-h-64 overflow-y-auto mb-4">
-                  {gearList.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-3 group">
-                      <Checkbox
-                        checked={item.checked}
-                        onCheckedChange={() => handleGearListCheck(item.id)}
-                        className="data-[state=checked]:bg-studio-accent data-[state=checked]:border-studio-accent"
-                      />
-                      <span className={`flex-1 ${item.checked ? 'line-through text-studio-muted' : 'text-studio-text'}`}>
-                        {item.text}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemoveGearItem(item.id)}
-                        className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="flex space-x-2">
-                  <Input
-                    value={newGearItem}
-                    onChange={(e) => setNewGearItem(e.target.value)}
-                    placeholder="Add new gear..."
-                    className="bg-studio-bg border-studio-border text-studio-text"
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddGearItem()}
-                  />
-                  <Button
-                    onClick={handleAddGearItem}
-                    size="sm"
-                    className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
 
           <TabsContent value="details" className="mt-6">
             <div className="bg-studio-card border border-border rounded-lg p-6 space-y-6">
@@ -677,6 +568,109 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                     placeholder="Add any additional notes or special instructions..."
                     className="min-h-[80px] bg-studio-bg border-studio-border text-studio-text"
                   />
+                </div>
+              </div>
+              
+              {/* Lists Section moved from Lists tab */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                {/* Shot List */}
+                <div className="bg-studio-bg border border-border rounded-lg p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-studio-text">Shot List</h3>
+                    <Badge variant="outline" className="bg-studio-accent/20 text-studio-accent border-studio-accent/30">
+                      {shotList.filter(item => item.checked).length}/{shotList.length}
+                    </Badge>
+                  </div>
+                  
+                  <div className="space-y-3 max-h-64 overflow-y-auto mb-4">
+                    {shotList.map((item) => (
+                      <div key={item.id} className="flex items-center space-x-3 group">
+                        <Checkbox
+                          checked={item.checked}
+                          onCheckedChange={() => handleShotListCheck(item.id)}
+                          className="data-[state=checked]:bg-studio-accent data-[state=checked]:border-studio-accent"
+                        />
+                        <span className={`flex-1 ${item.checked ? 'line-through text-studio-muted' : 'text-studio-text'}`}>
+                          {item.text}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveShotItem(item.id)}
+                          className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Input
+                      value={newShotItem}
+                      onChange={(e) => setNewShotItem(e.target.value)}
+                      placeholder="Add new shot..."
+                      className="bg-studio-card border-studio-border text-studio-text"
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddShotItem()}
+                    />
+                    <Button
+                      onClick={handleAddShotItem}
+                      size="sm"
+                      className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Gear List */}
+                <div className="bg-studio-bg border border-border rounded-lg p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-studio-text">Gear List</h3>
+                    <Badge variant="outline" className="bg-studio-accent/20 text-studio-accent border-studio-accent/30">
+                      {gearList.filter(item => item.checked).length}/{gearList.length}
+                    </Badge>
+                  </div>
+                  
+                  <div className="space-y-3 max-h-64 overflow-y-auto mb-4">
+                    {gearList.map((item) => (
+                      <div key={item.id} className="flex items-center space-x-3 group">
+                        <Checkbox
+                          checked={item.checked}
+                          onCheckedChange={() => handleGearListCheck(item.id)}
+                          className="data-[state=checked]:bg-studio-accent data-[state=checked]:border-studio-accent"
+                        />
+                        <span className={`flex-1 ${item.checked ? 'line-through text-studio-muted' : 'text-studio-text'}`}>
+                          {item.text}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveGearItem(item.id)}
+                          className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Input
+                      value={newGearItem}
+                      onChange={(e) => setNewGearItem(e.target.value)}
+                      placeholder="Add new gear..."
+                      className="bg-studio-card border-studio-border text-studio-text"
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddGearItem()}
+                    />
+                    <Button
+                      onClick={handleAddGearItem}
+                      size="sm"
+                      className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
