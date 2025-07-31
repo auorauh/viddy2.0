@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, ChevronLeft, ChevronRight, Plus, Home, User, Zap } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Plus, Home, User } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,18 +62,8 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
           
           <h1 className="text-2xl font-bold text-studio-text absolute left-1/2 transform -translate-x-1/2">{activeFolderName}</h1>
           
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className="p-2 text-studio-text hover:text-studio-accent"
-            >
-              <NavLink to="/idea-pitch">
-                <Zap className="h-4 w-4" />
-              </NavLink>
-            </Button>
-            <div className="flex items-center space-x-2 text-studio-muted">
+           <div className="flex items-center space-x-4">
+             <div className="flex items-center space-x-2 text-studio-muted">
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -114,18 +104,8 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
           />
         </div>
         
-        {/* Lightning bolt and pagination */}
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="h-8 w-8 p-0 text-studio-text hover:text-studio-accent"
-          >
-            <NavLink to="/idea-pitch">
-              <Zap className="h-4 w-4" />
-            </NavLink>
-          </Button>
+        {/* Pagination */}
+        <div className="flex items-center justify-center">
           <div className="flex items-center space-x-1 text-studio-muted">
             <Button 
               variant="ghost" 

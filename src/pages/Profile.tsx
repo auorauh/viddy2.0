@@ -571,21 +571,23 @@ const Profile = () => {
                   <span>Submit a Bug</span>
                 </Button>
                 
-                <Button
-                  variant="outline"
-                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
-                >
-                  <UserPlus className="w-5 h-5" />
-                  <span>Apply to be a Beta Tester</span>
-                </Button>
+                <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button
+                    variant="outline"
+                    className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                  >
+                    <UserPlus className="w-5 h-5" />
+                    <span>Apply to be a Beta Tester</span>
+                  </Button>
 
-                <Button
-                  variant="outline"
-                  className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto md:col-span-2"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span>Sign out</span>
-                </Button>
+                  <Button
+                    variant="outline"
+                    className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span>Sign out</span>
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
