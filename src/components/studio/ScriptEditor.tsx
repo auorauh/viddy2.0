@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { ScriptBoard } from "../../pages/Studio";
 
@@ -31,6 +32,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   const [emailRecipient, setEmailRecipient] = useState("");
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [importText, setImportText] = useState("");
+  const [splitMethod, setSplitMethod] = useState("line");
   
   // Shot List and Gear List state
   const [shotList, setShotList] = useState([
@@ -143,8 +145,18 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   // Script import functionality
   const handleImportScript = () => {
     if (importText.trim()) {
-      // Split the text into lines and filter out empty lines
-      const lines = importText.split('\n').filter(line => line.trim());
+      let lines: string[] = [];
+      
+      if (splitMethod === "sentence") {
+        // Split by sentences - look for periods, exclamation marks, and question marks
+        lines = importText
+          .split(/[.!?]+/)
+          .map(sentence => sentence.trim())
+          .filter(sentence => sentence.length > 0);
+      } else {
+        // Split by line breaks (default)
+        lines = importText.split('\n').filter(line => line.trim());
+      }
       
       // Format each line as a bullet point and join them
       const formattedContent = lines.map(line => line.trim()).join('\n');
@@ -443,6 +455,19 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                               placeholder="Paste your script here. Each line will become a numbered talking point..."
                               className="min-h-[200px] resize-none"
                             />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="split-method">Split:</Label>
+                            <Select value={splitMethod} onValueChange={setSplitMethod}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="line">By Line Break</SelectItem>
+                                <SelectItem value="sentence">By Sentence</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                           
                           <div className="flex space-x-2 justify-end">
