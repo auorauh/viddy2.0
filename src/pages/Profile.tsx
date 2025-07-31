@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, Youtube, Video, Target, Bot, ChevronDown, Trash2, Crown, Edit, Eye, Users, MessageCircleQuestion, Trophy, Star, CheckCircle2, Zap, Upload, Image } from "lucide-react";
+import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, MessageCircleQuestion, Upload, Image, Trash2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,7 +24,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const Profile = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false);
+  
   
   const [isQuestionsDialogOpen, setIsQuestionsDialogOpen] = useState(false);
   const [isChallengesDialogOpen, setIsChallengesDialogOpen] = useState(false);
@@ -72,14 +72,6 @@ const Profile = () => {
   const getPointsNeededForNextLevel = (points: number, level: number) => getPointsForNextLevel(level) - points;
 
 
-  // Team management state
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<"owner" | "editor" | "viewer">("viewer");
-  const [teamMembers, setTeamMembers] = useState([
-    { id: "1", name: "John Doe", email: "john@example.com", role: "owner", avatar: "" },
-    { id: "2", name: "Jane Smith", email: "jane@example.com", role: "editor", avatar: "" },
-    { id: "3", name: "Mike Johnson", email: "mike@example.com", role: "viewer", avatar: "" }
-  ]);
 
   const [editForm, setEditForm] = useState(profile);
 
@@ -111,48 +103,6 @@ const Profile = () => {
   };
 
 
-  const handleInviteMember = () => {
-    if (inviteEmail && inviteRole) {
-      const newMember = {
-        id: Date.now().toString(),
-        name: inviteEmail.split("@")[0],
-        email: inviteEmail,
-        role: inviteRole,
-        avatar: ""
-      };
-      setTeamMembers([...teamMembers, newMember]);
-      setInviteEmail("");
-      setInviteRole("viewer");
-    }
-  };
-
-  const handleRemoveMember = (id: string) => {
-    setTeamMembers(teamMembers.filter(member => member.id !== id));
-  };
-
-  const handleRoleChange = (id: string, newRole: "owner" | "editor" | "viewer") => {
-    setTeamMembers(teamMembers.map(member => 
-      member.id === id ? { ...member, role: newRole } : member
-    ));
-  };
-
-  const getRoleIcon = (role: string) => {
-    switch (role) {
-      case "owner": return <Crown className="w-4 h-4" />;
-      case "editor": return <Edit className="w-4 h-4" />;
-      case "viewer": return <Eye className="w-4 h-4" />;
-      default: return <Eye className="w-4 h-4" />;
-    }
-  };
-
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case "owner": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      case "editor": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-      case "viewer": return "bg-gray-500/20 text-gray-400 border-gray-500/30";
-      default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
-    }
-  };
 
   const handleEditUploadRate = () => {
     setTempUploadRate(profile.uploadRate);
@@ -424,164 +374,6 @@ const Profile = () => {
         {/* Bento Box Layout */}
         <div className="grid grid-cols-1 gap-6">
 
-          {/* Team Management */}
-          <Card className="bg-studio-card border-studio-border">
-            <CardHeader>
-              <CardTitle className="text-studio-text flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Users className="w-5 h-5" />
-                  Team Management
-                </div>
-                <Dialog open={isTeamDialogOpen} onOpenChange={setIsTeamDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Manage
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle className="text-studio-text">Team Management</DialogTitle>
-                      <DialogDescription className="text-studio-muted">
-                        Manage your team members and their permissions.
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="space-y-6">
-                      {/* Invite new member */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-studio-text">Invite Team Member</h3>
-                        <div className="flex space-x-2">
-                          <Input
-                            placeholder="Enter email address"
-                            value={inviteEmail}
-                            onChange={(e) => setInviteEmail(e.target.value)}
-                            className="bg-studio-bg border-studio-border text-studio-text flex-1"
-                          />
-                          <Select value={inviteRole} onValueChange={(value: "owner" | "editor" | "viewer") => setInviteRole(value)}>
-                            <SelectTrigger className="w-32 bg-studio-bg border-studio-border text-studio-text">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-studio-card border-studio-border">
-                              <SelectItem value="viewer" className="text-studio-text">Viewer</SelectItem>
-                              <SelectItem value="editor" className="text-studio-text">Editor</SelectItem>
-                              <SelectItem value="owner" className="text-studio-text">Owner</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Button 
-                            onClick={handleInviteMember}
-                            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                          >
-                            <UserPlus className="w-4 h-4 mr-2" />
-                            Invite
-                          </Button>
-                        </div>
-                      </div>
-                      
-                      {/* Current team members */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-studio-text">Team Members</h3>
-                        <div className="space-y-3">
-                          {teamMembers.map((member) => (
-                            <div key={member.id} className="flex items-center justify-between p-3 bg-studio-bg rounded-lg border border-studio-border">
-                              <div className="flex items-center space-x-3">
-                                <Avatar className="w-8 h-8">
-                                  <AvatarFallback className="bg-studio-accent text-studio-bg text-sm">
-                                    {member.name.split(' ').map(n => n[0]).join('')}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-medium text-studio-text">{member.name}</p>
-                                  <p className="text-sm text-studio-muted">{member.email}</p>
-                                </div>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <Badge className={`${getRoleBadgeVariant(member.role)} border`}>
-                                  <span className="flex items-center space-x-1">
-                                    {getRoleIcon(member.role)}
-                                    <span className="capitalize">{member.role}</span>
-                                  </span>
-                                </Badge>
-                                <Select 
-                                  value={member.role} 
-                                  onValueChange={(value: "owner" | "editor" | "viewer") => handleRoleChange(member.id, value)}
-                                >
-                                  <SelectTrigger className="w-20 h-8 bg-studio-card border-studio-border text-studio-text">
-                                    <ChevronDown className="w-3 h-3" />
-                                  </SelectTrigger>
-                                  <SelectContent className="bg-studio-card border-studio-border">
-                                    <SelectItem value="viewer" className="text-studio-text">Viewer</SelectItem>
-                                    <SelectItem value="editor" className="text-studio-text">Editor</SelectItem>
-                                    <SelectItem value="owner" className="text-studio-text">Owner</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                {member.role !== "owner" && (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleRemoveMember(member.id)}
-                                    className="h-8 w-8 p-0 bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsTeamDialogOpen(false)}
-                        className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
-                      >
-                        Close
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-studio-muted">Team Members</span>
-                  <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
-                    {teamMembers.length} members
-                  </Badge>
-                </div>
-                
-                <div className="space-y-2">
-                  {teamMembers.slice(0, 3).map((member) => (
-                    <div key={member.id} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Avatar className="w-6 h-6">
-                          <AvatarFallback className="bg-studio-accent text-studio-bg text-xs">
-                            {member.name.split(' ').map(n => n[0]).join('')}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-studio-text text-sm">{member.name}</span>
-                      </div>
-                      <Badge className={`${getRoleBadgeVariant(member.role)} border text-xs`}>
-                        <span className="flex items-center space-x-1">
-                          {getRoleIcon(member.role)}
-                          <span className="capitalize">{member.role}</span>
-                        </span>
-                      </Badge>
-                    </div>
-                  ))}
-                  {teamMembers.length > 3 && (
-                    <p className="text-xs text-studio-muted">
-                      +{teamMembers.length - 3} more members
-                    </p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Settings */}
           <Card className="bg-studio-card border-studio-border">

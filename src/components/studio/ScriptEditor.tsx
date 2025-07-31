@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail, FileText, Download, X, Upload } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail, FileText, Download, X, Upload, Users, Settings, UserPlus, ChevronDown, Crown, Edit, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -8,9 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import type { ScriptBoard } from "../../pages/Studio";
 
@@ -63,6 +64,16 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     { id: "2", scene: "Scene 2: Dialogue", startTime: "09:30", duration: "45", description: "Key conversation between characters" }
   ]);
 
+  // Team management state
+  const [isTeamDialogOpen, setIsTeamDialogOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<"owner" | "editor" | "viewer">("viewer");
+  const [teamMembers, setTeamMembers] = useState([
+    { id: "1", name: "John Doe", email: "john@example.com", role: "owner", avatar: "" },
+    { id: "2", name: "Jane Smith", email: "jane@example.com", role: "editor", avatar: "" },
+    { id: "3", name: "Mike Johnson", email: "mike@example.com", role: "viewer", avatar: "" }
+  ]);
+
   const handleAddScheduleItem = () => {
     const newItem = {
       id: Date.now().toString(),
@@ -91,6 +102,61 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     const endHours = Math.floor(totalMinutes / 60);
     const endMins = totalMinutes % 60;
     return `${endHours.toString().padStart(2, "0")}:${endMins.toString().padStart(2, "0")}`;
+  };
+
+  // Team management functions
+  const handleInviteMember = () => {
+    if (inviteEmail && inviteRole) {
+      const newMember = {
+        id: Date.now().toString(),
+        name: inviteEmail.split("@")[0],
+        email: inviteEmail,
+        role: inviteRole,
+        avatar: ""
+      };
+      setTeamMembers([...teamMembers, newMember]);
+      setInviteEmail("");
+      setInviteRole("viewer");
+      toast({
+        title: "Team member invited",
+        description: `${newMember.name} has been added to the team.`,
+      });
+    }
+  };
+
+  const handleRemoveMember = (id: string) => {
+    const memberToRemove = teamMembers.find(member => member.id === id);
+    setTeamMembers(teamMembers.filter(member => member.id !== id));
+    if (memberToRemove) {
+      toast({
+        title: "Team member removed",
+        description: `${memberToRemove.name} has been removed from the team.`,
+      });
+    }
+  };
+
+  const handleRoleChange = (id: string, newRole: "owner" | "editor" | "viewer") => {
+    setTeamMembers(teamMembers.map(member => 
+      member.id === id ? { ...member, role: newRole } : member
+    ));
+  };
+
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case "owner": return <Crown className="w-4 h-4" />;
+      case "editor": return <Edit className="w-4 h-4" />;
+      case "viewer": return <Eye className="w-4 h-4" />;
+      default: return <Eye className="w-4 h-4" />;
+    }
+  };
+
+  const getRoleBadgeVariant = (role: string) => {
+    switch (role) {
+      case "owner": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case "editor": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case "viewer": return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+      default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+    }
   };
 
   const shareUrl = `${window.location.origin}/shared/board/${script.id}`;
@@ -389,6 +455,12 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
             >
               Schedule
+            </TabsTrigger>
+            <TabsTrigger 
+              value="team"
+              className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
+            >
+              Team
             </TabsTrigger>
           </TabsList>
 
@@ -894,6 +966,163 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                   </div>
                 </div>
               )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="team" className="mt-6">
+            <div className="bg-studio-card border border-border rounded-lg p-6 space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Users className="w-5 h-5 text-studio-text" />
+                  <h3 className="text-lg font-semibold text-studio-text">Team Management</h3>
+                </div>
+                <Dialog open={isTeamDialogOpen} onOpenChange={setIsTeamDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Manage
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-studio-card border-studio-border max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle className="text-studio-text">Team Management</DialogTitle>
+                      <DialogDescription className="text-studio-muted">
+                        Manage your team members and their permissions.
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                      {/* Invite new member */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-studio-text">Invite Team Member</h3>
+                        <div className="flex space-x-2">
+                          <Input
+                            placeholder="Enter email address"
+                            value={inviteEmail}
+                            onChange={(e) => setInviteEmail(e.target.value)}
+                            className="bg-studio-bg border-studio-border text-studio-text flex-1"
+                          />
+                          <Select value={inviteRole} onValueChange={(value: "owner" | "editor" | "viewer") => setInviteRole(value)}>
+                            <SelectTrigger className="w-32 bg-studio-bg border-studio-border text-studio-text">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-studio-card border-studio-border">
+                              <SelectItem value="viewer" className="text-studio-text">Viewer</SelectItem>
+                              <SelectItem value="editor" className="text-studio-text">Editor</SelectItem>
+                              <SelectItem value="owner" className="text-studio-text">Owner</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Button 
+                            onClick={handleInviteMember}
+                            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                          >
+                            <UserPlus className="w-4 h-4 mr-2" />
+                            Invite
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      {/* Current team members */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-studio-text">Team Members</h3>
+                        <div className="space-y-3">
+                          {teamMembers.map((member) => (
+                            <div key={member.id} className="flex items-center justify-between p-3 bg-studio-bg rounded-lg border border-studio-border">
+                              <div className="flex items-center space-x-3">
+                                <Avatar className="w-8 h-8">
+                                  <AvatarFallback className="bg-studio-accent text-studio-bg text-sm">
+                                    {member.name.split(' ').map(n => n[0]).join('')}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium text-studio-text">{member.name}</p>
+                                  <p className="text-sm text-studio-muted">{member.email}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Badge className={`${getRoleBadgeVariant(member.role)} border`}>
+                                  <span className="flex items-center space-x-1">
+                                    {getRoleIcon(member.role)}
+                                    <span className="capitalize">{member.role}</span>
+                                  </span>
+                                </Badge>
+                                <Select 
+                                  value={member.role} 
+                                  onValueChange={(value: "owner" | "editor" | "viewer") => handleRoleChange(member.id, value)}
+                                >
+                                  <SelectTrigger className="w-20 h-8 bg-studio-card border-studio-border text-studio-text">
+                                    <ChevronDown className="w-3 h-3" />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-studio-card border-studio-border">
+                                    <SelectItem value="viewer" className="text-studio-text">Viewer</SelectItem>
+                                    <SelectItem value="editor" className="text-studio-text">Editor</SelectItem>
+                                    <SelectItem value="owner" className="text-studio-text">Owner</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                {member.role !== "owner" && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleRemoveMember(member.id)}
+                                    className="h-8 w-8 p-0 bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsTeamDialogOpen(false)}
+                        className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
+                      >
+                        Close
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-studio-muted">Team Members</span>
+                  <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
+                    {teamMembers.length} members
+                  </Badge>
+                </div>
+                
+                <div className="space-y-2">
+                  {teamMembers.slice(0, 3).map((member) => (
+                    <div key={member.id} className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Avatar className="w-6 h-6">
+                          <AvatarFallback className="bg-studio-accent text-studio-bg text-xs">
+                            {member.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-studio-text text-sm">{member.name}</span>
+                      </div>
+                      <Badge className={`${getRoleBadgeVariant(member.role)} border text-xs`}>
+                        <span className="flex items-center space-x-1">
+                          {getRoleIcon(member.role)}
+                          <span className="capitalize">{member.role}</span>
+                        </span>
+                      </Badge>
+                    </div>
+                  ))}
+                  {teamMembers.length > 3 && (
+                    <p className="text-xs text-studio-muted">
+                      +{teamMembers.length - 3} more members
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
