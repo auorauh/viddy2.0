@@ -101,9 +101,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
           <span className="text-lg font-mono font-bold">{formatTime(recordingTime)}</span>
         </div>
         
-        <div className="flex items-center space-x-4">
-          <span className="text-sm">View Script</span>
-          <span className="text-sm">Recording mode</span>
+        <div className="flex items-center">
           <Button
             variant="ghost"
             size="sm"
