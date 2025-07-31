@@ -84,7 +84,6 @@ const Studio = () => {
     { id: '1', name: 'All Scripts', isActive: true },
     { id: '2', name: 'TikTok' },
     { id: '3', name: 'Instagram' },
-    { id: '4', name: 'YouTube Videos' },
     { id: '5', name: 'Greater Creator' },
     { id: '6', name: 'Movements Series' },
   ];
