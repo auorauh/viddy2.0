@@ -41,10 +41,15 @@ const Profile = () => {
     interests: ["Technology", "Lifestyle", "Education"],
     platform: "YouTube",
     uploadRate: 8,
+    uploadRatePeriod: "month" as "day" | "week" | "month" | "year",
     points: 750,
     level: 8,
     customLogo: null as string | null,
   });
+
+  const [isEditingUploadRate, setIsEditingUploadRate] = useState(false);
+  const [tempUploadRate, setTempUploadRate] = useState(profile.uploadRate);
+  const [tempUploadRatePeriod, setTempUploadRatePeriod] = useState(profile.uploadRatePeriod);
 
   // Challenge system state
   const [challenges, setChallenges] = useState([
@@ -147,6 +152,27 @@ const Profile = () => {
       case "viewer": return "bg-gray-500/20 text-gray-400 border-gray-500/30";
       default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
     }
+  };
+
+  const handleEditUploadRate = () => {
+    setTempUploadRate(profile.uploadRate);
+    setTempUploadRatePeriod(profile.uploadRatePeriod);
+    setIsEditingUploadRate(true);
+  };
+
+  const handleSaveUploadRate = () => {
+    setProfile(prev => ({
+      ...prev,
+      uploadRate: tempUploadRate,
+      uploadRatePeriod: tempUploadRatePeriod
+    }));
+    setIsEditingUploadRate(false);
+  };
+
+  const handleCancelUploadRate = () => {
+    setTempUploadRate(profile.uploadRate);
+    setTempUploadRatePeriod(profile.uploadRatePeriod);
+    setIsEditingUploadRate(false);
   };
 
   return (
@@ -336,19 +362,63 @@ const Profile = () => {
             </CardContent>
           </Card>
           
-          <Card className="bg-studio-card border-studio-border md:col-span-1 lg:col-span-2">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-studio-muted text-sm">Upload Rate</p>
-                  <p className="text-3xl font-bold text-studio-text">{profile.uploadRate}/month</p>
-                </div>
-                <Badge variant="secondary" className="bg-blue-500/20 text-blue-400">
-                  Target
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+           <Card className="bg-studio-card border-studio-border md:col-span-1 lg:col-span-2 cursor-pointer hover:bg-studio-accent/5 transition-colors" onClick={!isEditingUploadRate ? handleEditUploadRate : undefined}>
+             <CardContent className="p-6">
+               {!isEditingUploadRate ? (
+                 <div className="flex items-center justify-between">
+                   <div>
+                     <p className="text-studio-muted text-sm">Upload Rate</p>
+                     <p className="text-3xl font-bold text-studio-text">{profile.uploadRate}/{profile.uploadRatePeriod}</p>
+                   </div>
+                   <Badge variant="secondary" className="bg-blue-500/20 text-blue-400">
+                     Target
+                   </Badge>
+                 </div>
+               ) : (
+                 <div className="space-y-4">
+                   <p className="text-studio-muted text-sm">Upload Rate</p>
+                   <div className="flex items-center space-x-2">
+                     <Input
+                       type="number"
+                       value={tempUploadRate}
+                       onChange={(e) => setTempUploadRate(Number(e.target.value))}
+                       className="bg-studio-bg border-studio-border text-studio-text w-20"
+                       min="1"
+                     />
+                     <span className="text-studio-text">/</span>
+                     <Select value={tempUploadRatePeriod} onValueChange={(value: "day" | "week" | "month" | "year") => setTempUploadRatePeriod(value)}>
+                       <SelectTrigger className="w-24 bg-studio-bg border-studio-border text-studio-text">
+                         <SelectValue />
+                       </SelectTrigger>
+                       <SelectContent className="bg-studio-card border-studio-border">
+                         <SelectItem value="day" className="text-studio-text">Day</SelectItem>
+                         <SelectItem value="week" className="text-studio-text">Week</SelectItem>
+                         <SelectItem value="month" className="text-studio-text">Month</SelectItem>
+                         <SelectItem value="year" className="text-studio-text">Year</SelectItem>
+                       </SelectContent>
+                     </Select>
+                   </div>
+                   <div className="flex space-x-2">
+                     <Button
+                       size="sm"
+                       onClick={handleSaveUploadRate}
+                       className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                     >
+                       Save
+                     </Button>
+                     <Button
+                       size="sm"
+                       variant="outline"
+                       onClick={handleCancelUploadRate}
+                       className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-muted"
+                     >
+                       Cancel
+                     </Button>
+                   </div>
+                 </div>
+               )}
+             </CardContent>
+           </Card>
         </div>
 
         {/* Bento Box Layout */}
