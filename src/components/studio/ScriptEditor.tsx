@@ -808,23 +808,9 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             <div className="space-y-6">
               {/* Editor Guides Section */}
               <div className="bg-studio-card border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4">
                   <h3 className="text-lg font-semibold text-studio-text">Editor Guides</h3>
-                  <Button
-                    onClick={() => {
-                      const newPart = `Part ${editorGuides.length + 1}`;
-                      setEditorGuides(prev => [...prev, {
-                        id: Date.now().toString(),
-                        partName: newPart,
-                        versions: []
-                      }]);
-                    }}
-                    size="sm"
-                    className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Part
-                  </Button>
+                  <p className="text-sm text-studio-muted mt-1">Your recorded videos will be saved here</p>
                 </div>
 
                 {/* Parts organized left to right, versions top to bottom */}
@@ -888,8 +874,8 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                   {editorGuides.length === 0 && (
                     <div className="col-span-full text-center py-8 text-studio-muted">
                       <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>No editor guides yet</p>
-                      <p className="text-sm">Click "Add Part" to create your first guide</p>
+                      <p>No videos recorded yet</p>
+                      <p className="text-sm">Record your script to save videos here</p>
                     </div>
                   )}
                 </div>
