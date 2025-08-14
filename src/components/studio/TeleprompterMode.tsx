@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, RotateCcw, Play, Square, Pause } from "lucide-react";
+import { ArrowLeft, RotateCcw, Play, Square, Pause, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import type { ScriptBoard } from "../../pages/Studio";
 
 interface TeleprompterModeProps {
@@ -15,6 +16,8 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   const [recordingState, setRecordingState] = useState<'idle' | 'countdown' | 'recording'>('idle');
   const [countdown, setCountdown] = useState(3);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState("");
 
   // Break script into bullet points/sentences
   useEffect(() => {
@@ -117,6 +120,23 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
     }
   };
 
+  const handleEditStart = () => {
+    setEditText(scriptPoints[currentPoint] || "");
+    setIsEditing(true);
+  };
+
+  const handleEditSave = () => {
+    const updatedPoints = [...scriptPoints];
+    updatedPoints[currentPoint] = editText;
+    setScriptPoints(updatedPoints);
+    setIsEditing(false);
+  };
+
+  const handleEditCancel = () => {
+    setIsEditing(false);
+    setEditText("");
+  };
+
   const currentText = scriptPoints[currentPoint] || "Script completed!";
 
   return (
@@ -147,8 +167,17 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
           <span className="text-lg font-mono font-bold">{formatTime(recordingTime)}</span>
         </div>
         
-        {/* Pause button moved to absolute far right */}
-        <div className="absolute right-6">
+        {/* Edit and Pause buttons moved to absolute far right */}
+        <div className="absolute right-6 flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleEditStart}
+            className="text-white hover:bg-white/10"
+          >
+            <Edit className="mr-1 h-4 w-4" />
+            Edit
+          </Button>
           <Button
             variant="ghost"
             size="sm"
@@ -163,31 +192,57 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
       {/* Main Teleprompter Area */}
       <div 
         className="flex-1 flex items-center justify-center p-12 cursor-pointer"
-        onClick={recordingState === 'idle' ? handleStartRecording : handleStopRecording}
+        onClick={!isEditing && (recordingState === 'idle' ? handleStartRecording : handleStopRecording)}
       >
         <div className="max-w-4xl text-center">
-          {recordingState === 'idle' && (
+          {!isEditing && recordingState === 'idle' && (
             <p className="text-white/60 text-lg mb-8">
               Click anywhere or space bar to start
             </p>
           )}
           
-          {recordingState === 'countdown' && (
+          {!isEditing && recordingState === 'countdown' && (
             <div className="text-studio-accent text-8xl font-bold mb-8">
               {countdown}
             </div>
           )}
           
-          {recordingState === 'recording' && (
+          {!isEditing && recordingState === 'recording' && (
             <div className="flex items-center justify-center mb-8 space-x-4">
               <div className="w-4 h-4 bg-studio-record rounded-full animate-pulse" />
               <span className="text-studio-record text-lg font-medium">RECORDING</span>
             </div>
           )}
           
-          <p className="text-white text-4xl leading-relaxed font-light">
-            {currentText}
-          </p>
+          {isEditing ? (
+            <div className="w-full max-w-2xl">
+              <Textarea
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                className="w-full min-h-[200px] text-white text-2xl leading-relaxed font-light bg-white/10 border-white/20 resize-none"
+                placeholder="Edit your script point..."
+              />
+              <div className="flex justify-center space-x-4 mt-6">
+                <Button
+                  onClick={handleEditSave}
+                  className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleEditCancel}
+                  className="bg-transparent border-white/20 text-white hover:bg-white/10"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-white text-4xl leading-relaxed font-light">
+              {currentText}
+            </p>
+          )}
         </div>
       </div>
 
