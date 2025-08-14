@@ -77,6 +77,46 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const openTeleprompterWindow = () => {
+    const newWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+    if (newWindow) {
+      newWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Teleprompter</title>
+            <style>
+              body {
+                margin: 0;
+                padding: 40px;
+                background: black;
+                color: white;
+                font-family: system-ui, -apple-system, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                text-align: center;
+              }
+              .content {
+                font-size: 2.5rem;
+                line-height: 1.6;
+                font-weight: 300;
+                max-width: 80%;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="content">
+              ${currentText}
+            </div>
+          </body>
+        </html>
+      `);
+      newWindow.document.close();
+    }
+  };
+
   const currentText = scriptPoints[currentPoint] || "Script completed!";
 
   return (
@@ -88,6 +128,12 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
             {String(currentPoint + 1).padStart(2, '0')}/{String(scriptPoints.length).padStart(2, '0')}
           </span>
           <span className="text-sm">Font Size: 38px</span>
+          <button
+            onClick={openTeleprompterWindow}
+            className="text-sm text-white hover:text-white/80 underline cursor-pointer"
+          >
+            Teleprompter
+          </button>
           <div className="flex-1 bg-white/20 h-2 rounded-full max-w-32">
             <div 
               className="bg-white h-full rounded-full transition-all"
@@ -101,7 +147,8 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
           <span className="text-lg font-mono font-bold">{formatTime(recordingTime)}</span>
         </div>
         
-        <div className="flex items-center">
+        {/* Pause button moved to absolute far right */}
+        <div className="absolute right-6">
           <Button
             variant="ghost"
             size="sm"
