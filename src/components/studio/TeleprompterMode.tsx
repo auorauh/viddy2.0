@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, RotateCcw, Play, Square, Pause, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import type { ScriptBoard } from "../../pages/Studio";
 
 interface TeleprompterModeProps {
@@ -182,14 +183,29 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
             <Edit className="mr-1 h-4 w-4" />
             Edit
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onBack}
-            className="text-white hover:bg-white/10"
-          >
-            Pause
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-white hover:bg-white/10"
+              >
+                End
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>End Recording Session?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to end early? Your progress will be saved.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>No</AlertDialogCancel>
+                <AlertDialogAction onClick={onBack}>Yes</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </header>
 
