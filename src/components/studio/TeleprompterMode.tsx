@@ -140,7 +140,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   const currentText = scriptPoints[currentPoint] || "Script completed!";
 
   return (
-    <div className="flex-1 flex flex-col bg-black">
+    <div className="fixed inset-0 z-50 flex flex-col bg-black">
       {/* Recording Header */}
       <header className="bg-studio-record px-6 py-3 flex items-center text-white relative">
         <div className="flex items-center space-x-4">
