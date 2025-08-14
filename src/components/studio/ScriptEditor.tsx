@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail, FileText, Download, X, Upload, Users, Settings, UserPlus, ChevronDown, Crown, Edit, Eye } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Plus, Clock, Video, Trash2, Share, Copy, Mail, FileText, Download, X, Upload, Users, Settings, UserPlus, ChevronDown, Crown, Edit, Eye, GripVertical } from "lucide-react";
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -362,6 +363,30 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     }
   };
 
+  // Drag and drop functionality for script points
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, source } = result;
+
+    // If dropped outside the list or in the same position, do nothing
+    if (!destination || (destination.index === source.index)) {
+      return;
+    }
+
+    // Reorder the script points
+    const lines = content.split('\n').filter(line => line.trim());
+    const [reorderedItem] = lines.splice(source.index, 1);
+    lines.splice(destination.index, 0, reorderedItem);
+    
+    // Update content with reordered points
+    setContent(lines.join('\n'));
+    
+    // Reset editing state if we were editing a point
+    if (editingPointIndex !== null) {
+      setEditingPointIndex(null);
+      setEditingPointText("");
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col">
       {/* Header */}
@@ -423,78 +448,102 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             <div className="bg-studio-card border border-border rounded-lg flex-1 flex flex-col">
               {/* Script Points */}
               <div className="p-6 flex-1 overflow-y-auto">
-                <div className="space-y-3">
-                  {content.split('\n').filter(line => line.trim()).map((line, index) => (
-                    <div key={index} className="bg-black/40 rounded-lg p-4 flex items-start space-x-4 group">
-                      <span className="text-white font-bold text-lg min-w-[24px]">
-                        {index + 1}
-                      </span>
-                      {editingPointIndex === index ? (
-                        <div className="flex-1 space-y-3">
-                          <Textarea
-                            value={editingPointText}
-                            onChange={(e) => setEditingPointText(e.target.value)}
-                            className="w-full text-white text-base leading-relaxed bg-white/10 border-white/20 resize-none min-h-[80px]"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && e.ctrlKey) {
-                                handleSavePoint();
-                              }
-                              if (e.key === 'Escape') {
-                                handleCancelEdit();
-                              }
-                            }}
-                          />
-                          <div className="flex space-x-2">
-                            <Button
-                              onClick={handleSavePoint}
-                              size="sm"
-                              className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-                            >
-                              Save
-                            </Button>
-                            <Button
-                              onClick={handleCancelEdit}
-                              variant="outline"
-                              size="sm"
-                              className="bg-transparent border-white/20 text-white hover:bg-white/10"
-                            >
-                              Cancel
-                            </Button>
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  <Droppable droppableId="script-points">
+                    {(provided) => (
+                      <div 
+                        {...provided.droppableProps} 
+                        ref={provided.innerRef}
+                        className="space-y-3"
+                      >
+                        {content.split('\n').filter(line => line.trim()).map((line, index) => (
+                          <Draggable key={`point-${index}`} draggableId={`point-${index}`} index={index}>
+                            {(provided, snapshot) => (
+                              <div 
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                className={`bg-black/40 rounded-lg p-4 flex items-start space-x-4 group ${
+                                  snapshot.isDragging ? 'shadow-lg ring-2 ring-white/20' : ''
+                                }`}
+                              >
+                                <div {...provided.dragHandleProps} className="flex items-center space-x-2">
+                                  <GripVertical className="w-4 h-4 text-white/40 hover:text-white/80 cursor-grab active:cursor-grabbing" />
+                                  <span className="text-white font-bold text-lg min-w-[24px]">
+                                    {index + 1}
+                                  </span>
+                                </div>
+                                {editingPointIndex === index ? (
+                                  <div className="flex-1 space-y-3">
+                                    <Textarea
+                                      value={editingPointText}
+                                      onChange={(e) => setEditingPointText(e.target.value)}
+                                      className="w-full text-white text-base leading-relaxed bg-white/10 border-white/20 resize-none min-h-[80px]"
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && e.ctrlKey) {
+                                          handleSavePoint();
+                                        }
+                                        if (e.key === 'Escape') {
+                                          handleCancelEdit();
+                                        }
+                                      }}
+                                    />
+                                    <div className="flex space-x-2">
+                                      <Button
+                                        onClick={handleSavePoint}
+                                        size="sm"
+                                        className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                                      >
+                                        Save
+                                      </Button>
+                                      <Button
+                                        onClick={handleCancelEdit}
+                                        variant="outline"
+                                        size="sm"
+                                        className="bg-transparent border-white/20 text-white hover:bg-white/10"
+                                      >
+                                        Cancel
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <p className="text-white text-base leading-relaxed flex-1">
+                                      {line.trim()}
+                                    </p>
+                                    <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <Button
+                                        onClick={() => handleEditPoint(index)}
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-6 w-6 p-0 text-white/60 hover:text-white hover:bg-white/10"
+                                      >
+                                        <Edit className="w-3 h-3" />
+                                      </Button>
+                                      <Button
+                                        onClick={() => handleDeletePoint(index)}
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </Button>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                        {(!content || content.trim() === '') && (
+                          <div className="text-studio-muted text-base italic text-center py-8">
+                            No script content yet. Add content to see numbered talking points.
                           </div>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="text-white text-base leading-relaxed flex-1">
-                            {line.trim()}
-                          </p>
-                          <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button
-                              onClick={() => handleEditPoint(index)}
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 w-6 p-0 text-white/60 hover:text-white hover:bg-white/10"
-                            >
-                              <Edit className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              onClick={() => handleDeletePoint(index)}
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                  {(!content || content.trim() === '') && (
-                    <div className="text-studio-muted text-base italic text-center py-8">
-                      No script content yet. Add content to see numbered talking points.
-                    </div>
-                  )}
-                </div>
+                        )}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
               </div>
               
               {/* Typing Bar */}
