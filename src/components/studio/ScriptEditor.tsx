@@ -410,6 +410,66 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
           </div>
           
           <div className="flex items-center space-x-3">
+            <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hover:bg-accent hover:text-accent-foreground"
+                >
+                  Import
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Import Script</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="import-script">Paste your script content</Label>
+                    <Textarea
+                      id="import-script"
+                      value={importText}
+                      onChange={(e) => setImportText(e.target.value)}
+                      placeholder="Paste your script here. Each line will become a numbered talking point..."
+                      className="min-h-[200px] resize-none"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="split-method">Split:</Label>
+                    <Select value={splitMethod} onValueChange={setSplitMethod}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="line">By Line Break</SelectItem>
+                        <SelectItem value="sentence">By Sentence</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="flex space-x-2 justify-end">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setImportText("");
+                        setImportDialogOpen(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleImportScript}
+                      disabled={!importText.trim()}
+                      className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
+                    >
+                      Import
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
             <Button
               onClick={onRecord}
               className="bg-studio-record hover:bg-studio-record/90 text-white"
@@ -549,68 +609,6 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               {/* Typing Bar */}
               <div className="p-4 border-t border-border bg-black/20">
                 <div className="flex space-x-3">
-                  <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 bg-black hover:bg-black/80 border border-white rounded-full flex items-center justify-center"
-                        title="Import Script"
-                      >
-                        <Plus className="h-3 w-3 text-white" />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle>Import Script</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="import-script">Paste your script content</Label>
-                          <Textarea
-                            id="import-script"
-                            value={importText}
-                            onChange={(e) => setImportText(e.target.value)}
-                            placeholder="Paste your script here. Each line will become a numbered talking point..."
-                            className="min-h-[200px] resize-none"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="split-method">Split:</Label>
-                          <Select value={splitMethod} onValueChange={setSplitMethod}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="line">By Line Break</SelectItem>
-                              <SelectItem value="sentence">By Sentence</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        <div className="flex space-x-2 justify-end">
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              setImportText("");
-                              setImportDialogOpen(false);
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            onClick={handleImportScript}
-                            disabled={!importText.trim()}
-                            className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
-                          >
-                            Import
-                          </Button>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                  
                   <Input
                     value={newPoint}
                     onChange={(e) => setNewPoint(e.target.value)}
