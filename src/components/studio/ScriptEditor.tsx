@@ -30,6 +30,8 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   const [details, setDetails] = useState("");
   const [editing, setEditing] = useState("");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [editingPointIndex, setEditingPointIndex] = useState<number | null>(null);
+  const [editingPointText, setEditingPointText] = useState("");
   const [emailRecipient, setEmailRecipient] = useState("");
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [importText, setImportText] = useState("");
@@ -206,6 +208,34 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
       e.preventDefault();
       handleAddPoint();
     }
+  };
+
+  // Point editing functions
+  const handleEditPoint = (index: number) => {
+    const lines = content.split('\n').filter(line => line.trim());
+    setEditingPointIndex(index);
+    setEditingPointText(lines[index] || "");
+  };
+
+  const handleSavePoint = () => {
+    if (editingPointIndex !== null && editingPointText.trim()) {
+      const lines = content.split('\n').filter(line => line.trim());
+      lines[editingPointIndex] = editingPointText.trim();
+      setContent(lines.join('\n'));
+      setEditingPointIndex(null);
+      setEditingPointText("");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPointIndex(null);
+    setEditingPointText("");
+  };
+
+  const handleDeletePoint = (index: number) => {
+    const lines = content.split('\n').filter(line => line.trim());
+    lines.splice(index, 1);
+    setContent(lines.join('\n'));
   };
 
   // Script import functionality
@@ -395,13 +425,68 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               <div className="p-6 flex-1 overflow-y-auto">
                 <div className="space-y-3">
                   {content.split('\n').filter(line => line.trim()).map((line, index) => (
-                    <div key={index} className="bg-black/40 rounded-lg p-4 flex items-start space-x-4">
+                    <div key={index} className="bg-black/40 rounded-lg p-4 flex items-start space-x-4 group">
                       <span className="text-white font-bold text-lg min-w-[24px]">
                         {index + 1}
                       </span>
-                      <p className="text-white text-base leading-relaxed flex-1">
-                        {line.trim()}
-                      </p>
+                      {editingPointIndex === index ? (
+                        <div className="flex-1 space-y-3">
+                          <Textarea
+                            value={editingPointText}
+                            onChange={(e) => setEditingPointText(e.target.value)}
+                            className="w-full text-white text-base leading-relaxed bg-white/10 border-white/20 resize-none min-h-[80px]"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && e.ctrlKey) {
+                                handleSavePoint();
+                              }
+                              if (e.key === 'Escape') {
+                                handleCancelEdit();
+                              }
+                            }}
+                          />
+                          <div className="flex space-x-2">
+                            <Button
+                              onClick={handleSavePoint}
+                              size="sm"
+                              className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              onClick={handleCancelEdit}
+                              variant="outline"
+                              size="sm"
+                              className="bg-transparent border-white/20 text-white hover:bg-white/10"
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-white text-base leading-relaxed flex-1">
+                            {line.trim()}
+                          </p>
+                          <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              onClick={() => handleEditPoint(index)}
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 text-white/60 hover:text-white hover:bg-white/10"
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              onClick={() => handleDeletePoint(index)}
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))}
                   {(!content || content.trim() === '') && (
