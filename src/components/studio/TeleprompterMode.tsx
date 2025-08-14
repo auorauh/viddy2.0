@@ -18,6 +18,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   const [recordingTime, setRecordingTime] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState("");
+  const [hasRecordedCurrentPoint, setHasRecordedCurrentPoint] = useState(false);
 
   // Break script into bullet points/sentences
   useEffect(() => {
@@ -56,6 +57,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   const handleStopRecording = () => {
     setRecordingState('idle');
     setIsRecording(false);
+    setHasRecordedCurrentPoint(true);
     setRecordingTime(0);
   };
 
@@ -64,6 +66,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
       setCurrentPoint(currentPoint + 1);
       setRecordingState('idle');
       setIsRecording(false);
+      setHasRecordedCurrentPoint(false);
       setRecordingTime(0);
     }
   };
@@ -71,6 +74,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   const handleRedoPoint = () => {
     setRecordingState('idle');
     setIsRecording(false);
+    setHasRecordedCurrentPoint(false);
     setRecordingTime(0);
   };
 
@@ -247,7 +251,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
       </div>
 
       {/* Control Buttons */}
-      {recordingState === 'idle' && currentPoint < scriptPoints.length && (
+      {recordingState === 'idle' && currentPoint < scriptPoints.length && hasRecordedCurrentPoint && (
         <div className="p-6 flex justify-center space-x-4">
           <Button
             variant="outline"
@@ -258,14 +262,12 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
             Redo
           </Button>
           
-          {recordingTime > 0 && (
-            <Button
-              onClick={handleNextPoint}
-              className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
-            >
-              Next Point
-            </Button>
-          )}
+          <Button
+            onClick={handleNextPoint}
+            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+          >
+            Next Point
+          </Button>
         </div>
       )}
 
