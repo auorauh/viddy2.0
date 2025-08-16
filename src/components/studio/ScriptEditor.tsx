@@ -391,7 +391,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     <div className="flex-1 flex flex-col">
       {/* Header */}
       <header className="p-6 border-b border-border">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap ">
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
@@ -405,11 +405,11 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="text-xl font-bold bg-transparent border border-border rounded px-3 py-1 w-auto min-w-[200px]"
+              className="text-xl font-bold bg-transparent border border-border rounded px-3 py-1 min-w-[200px]"
             />
           </div>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 pt-3">
             <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
               <DialogTrigger asChild>
                 <Button

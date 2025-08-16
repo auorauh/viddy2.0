@@ -20,7 +20,7 @@ const Studio = () => {
     {
       id: '1',
       title: 'How to Kickflip',
-      content: 'Today I\'m going to teach you the secret to landing your first kickflip coming from a lifelong skateboarding vet OG. This is going to be a comprehensive guide that breaks down every aspect of the kickflip technique.',
+      content: 'Today I\'m going to teach you the secret to landing your first kickflip coming from a lifelong skateboarding vet OG. This is going to be a comprehensive guide that breaks down every aspect of the kickflip technique. 123456789. 12345678910.',
       folderId: '4',
       createdAt: new Date(),
       updatedAt: new Date(),

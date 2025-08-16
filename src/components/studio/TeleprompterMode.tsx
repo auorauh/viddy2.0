@@ -20,15 +20,26 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState("");
   const [hasRecordedCurrentPoint, setHasRecordedCurrentPoint] = useState(false);
+  const [isSmall, setIsSmall] = useState(false);
+  const [mobileView, setMobile] = useState(false);
+  const [fontSize, setFontSize] = useState(5);
 
   // Break script into bullet points/sentences
-  useEffect(() => {
-    const points = script.content
-      .split(/[.!?]+/)
-      .map(point => point.trim())
-      .filter(point => point.length > 10); // Filter out very short fragments
-    setScriptPoints(points);
-  }, [script.content]);
+useEffect(() => {
+  // 1. Handle script splitting
+  const points = script.content
+    .split(/[.!?]+/)
+    .map(point => point.trim())
+    .filter(point => point.length > 10);
+  setScriptPoints(points);
+
+  // 2. Run screen check on mount
+  checkScreen();
+
+  // 3. Run on window resize
+  window.addEventListener("resize", checkScreen);
+  return () => window.removeEventListener("resize", checkScreen);
+}, [script.content]);
 
   // Countdown timer
   useEffect(() => {
@@ -48,6 +59,13 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const checkScreen = () => {
+  const isMobile = window.innerWidth < 600;
+  if (isMobile)  {setFontSize(1.5);}
+  setMobile(isMobile);
+
+};
 
   const handleStartRecording = () => {
     setCountdown(3);
@@ -115,7 +133,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
             </style>
           </head>
           <body>
-            <div class="content">
+            <div class="content" style="font-size: ${fontSize}rem;">
               ${currentText}
             </div>
           </body>
@@ -147,18 +165,51 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black">
       {/* Recording Header */}
-      <header className="bg-studio-record px-6 py-3 flex items-center text-white relative">
+      <header className="bg-studio-record px-6 py-3 flex items-center text-white relative flex-wrap">
         <div className="flex items-center space-x-4">
           <span className="text-sm font-mono">
             {String(currentPoint + 1).padStart(2, '0')}/{String(scriptPoints.length).padStart(2, '0')}
           </span>
-          <span className="text-sm">Font Size: 38px</span>
+          {mobileView ?
+          <div className="relative w-48">
+            <label className="block mb-1 text-sm text-white">Font Size</label>
+            <select
+              value={fontSize}
+              onChange={(e) => setFontSize(Number(e.target.value))}
+              className="w-[75px] bg-studio-record text-white p-2 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            >
+              <option value={1.5}>1</option>
+              <option value={1.75}>2</option>
+              <option value={2}>3</option>
+              <option value={2.5}>4</option>
+              <option value={3}>5</option>
+            </select>
+          </div>
+          : 
+          <>
+          <span className="text-sm">Font Size: {fontSize}</span>
+                <input
+                  type="range"
+                  min="2"
+                  max="9"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(Number(e.target.value))}
+                  className="
+                    w-[150px] h-2
+                    bg-gray-300 rounded-lg appearance-none cursor-pointer
+                    accent-yellow-500
+                  "
+                />
+          </>
+          }
+          {mobileView ? <></> : 
           <button
             onClick={openTeleprompterWindow}
             className="text-sm text-white hover:text-white/80 underline cursor-pointer"
           >
             Teleprompter
           </button>
+          }
           <div className="flex-1 bg-white/20 h-2 rounded-full max-w-32">
             <div 
               className="bg-white h-full rounded-full transition-all"
@@ -211,10 +262,10 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
 
       {/* Main Teleprompter Area */}
       <div 
-        className="flex-1 flex items-center justify-center p-12 cursor-pointer"
+        className="flex-1 flex items-center justify-center p-12 cursor-pointer w-full overflow-y-auto"
         onClick={!isEditing && (recordingState === 'idle' ? handleStartRecording : handleStopRecording)}
       >
-        <div className="max-w-4xl text-center">
+        <div className="w-full text-center">
           {!isEditing && recordingState === 'idle' && (
             <p className="text-white/60 text-lg mb-8">
               Click anywhere or space bar to start
@@ -239,7 +290,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
               <Textarea
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
-                className="w-full min-h-[200px] text-white text-2xl leading-relaxed font-light bg-white/10 border-white/20 resize-none"
+                className="min-w-[300px] min-h-[600px] text-white text-2xl leading-relaxed font-light bg-white/10 border-white/20 resize-none"
                 placeholder="Edit your script point..."
               />
               <div className="flex justify-center space-x-4 mt-6">
@@ -259,7 +310,7 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
               </div>
             </div>
           ) : (
-            <p className="text-white text-4xl leading-relaxed font-light">
+            <p className="w-full text-white text-4xl leading-relaxed font-light" style={{ fontSize: `${fontSize}rem` }}>
               {currentText}
             </p>
           )}

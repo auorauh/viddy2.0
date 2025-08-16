@@ -45,7 +45,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="h-full flex flex-col">
       {/* Header */}
       {/* Desktop Header */}
       <header className="p-6 border-b border-border hidden md:block">
@@ -152,7 +152,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="border-t border-border px-4 py-3 md:p-8 mt-4 md:mt-8 safe-area-pb">
+      <footer className="absolute bottom-0 left-0 right-0 border-t border-border px-4 py-3 md:p-8 safe-area-pb bg-studio-card">
         <div className="flex items-center justify-center space-x-4 md:space-x-8">
           <Button
             variant="ghost"
