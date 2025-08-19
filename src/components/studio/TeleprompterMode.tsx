@@ -8,9 +8,10 @@ import type { ScriptBoard } from "../../pages/Studio";
 interface TeleprompterModeProps {
   script: ScriptBoard;
   onBack: () => void;
+  onFinish: () => void;
 }
 
-export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
+export const TeleprompterMode = ({ script, onBack, onFinish }: TeleprompterModeProps) => {
   const [scriptPoints, setScriptPoints] = useState<string[]>([]);
   const [currentPoint, setCurrentPoint] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
@@ -176,7 +177,7 @@ useEffect(() => {
   
   const finishRecording = () => {
     //TODO: SRT FILE Generation here 
-    onBack();
+    onFinish();
   }
 
   const currentText = scriptPoints[currentPoint] || "Script completed!";

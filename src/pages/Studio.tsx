@@ -3,6 +3,7 @@ import { MainContent } from "@/components/studio/MainContent";
 import { ScriptEditor } from "@/components/studio/ScriptEditor";
 import { CameraSync } from "@/components/studio/CameraSync";
 import { TeleprompterMode } from "@/components/studio/TeleprompterMode";
+import { Finish } from "@/components/studio/Finish";
 
 export interface ScriptBoard {
   id: string;
@@ -13,7 +14,7 @@ export interface ScriptBoard {
   updatedAt: Date;
 }
 
-export type ViewMode = 'boards' | 'editor' | 'camera-sync' | 'teleprompter';
+export type ViewMode = 'boards' | 'editor' | 'camera-sync' | 'teleprompter' | 'finish';
 
 const Studio = () => {
   const [scripts, setScripts] = useState<ScriptBoard[]>([
@@ -80,6 +81,9 @@ const Studio = () => {
     setViewMode('boards');
     setActiveScript(null);
   };
+  const handleFinish = () => {
+    setViewMode('finish');
+  }
 
   const filteredScripts = scripts.filter(script => 
     activeFolder === '1' ? true : script.folderId === activeFolder
@@ -123,6 +127,13 @@ const Studio = () => {
       
       {viewMode === 'teleprompter' && activeScript && (
         <TeleprompterMode 
+          script={activeScript}
+          onBack={handleBackToEditor}
+          onFinish={handleFinish}
+        />
+      )}
+      {viewMode === 'finish' && activeScript && (
+        <Finish 
           script={activeScript}
           onBack={handleBackToEditor}
         />
