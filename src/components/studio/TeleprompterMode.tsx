@@ -26,17 +26,14 @@ export const TeleprompterMode = ({ script, onBack }: TeleprompterModeProps) => {
 
   // Break script into bullet points/sentences
 useEffect(() => {
-  // 1. Handle script splitting
   const points = script.content
     .split(/[.!?]+/)
     .map(point => point.trim())
     .filter(point => point.length > 10);
   setScriptPoints(points);
 
-  // 2. Run screen check on mount
   checkScreen();
 
-  // 3. Run on window resize
   window.addEventListener("resize", checkScreen);
   return () => window.removeEventListener("resize", checkScreen);
 }, [script.content]);
@@ -51,6 +48,23 @@ useEffect(() => {
       setIsRecording(true);
     }
   }, [recordingState, countdown]);
+  //spacebar listener and action
+    useEffect(() => {
+      const spaceBarAction = (e) => {
+        if (e.code === "Space") {
+          e.preventDefault();
+
+          if (!isEditing && recordingState === "idle") {
+            handleStartRecording();
+          } else if (!isEditing && recordingState === "recording") {
+            handleStopRecording();
+          }
+        }
+      };
+
+      window.addEventListener("keydown", spaceBarAction);
+      return () => window.removeEventListener("keydown", spaceBarAction);
+    }, [isEditing, recordingState]);
 
   // Recording timer - starts immediately when component mounts
   useEffect(() => {
@@ -159,6 +173,11 @@ useEffect(() => {
     setIsEditing(false);
     setEditText("");
   };
+  
+  const finishRecording = () => {
+    //TODO: SRT FILE Generation here 
+    onBack();
+  }
 
   const currentText = scriptPoints[currentPoint] || "Script completed!";
 
@@ -329,12 +348,21 @@ useEffect(() => {
             Redo
           </Button>
           
+            {currentPoint+1 == scriptPoints.length ? 
+                    <Button
+            onClick={finishRecording}
+            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
+          >
+            Finish Recording
+          </Button>
+           : 
           <Button
             onClick={handleNextPoint}
             className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90"
           >
             Next Point
           </Button>
+            }
         </div>
       )}
 
