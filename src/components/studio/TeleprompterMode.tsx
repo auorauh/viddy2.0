@@ -52,20 +52,27 @@ useEffect(() => {
   //spacebar listener and action
     useEffect(() => {
       const spaceBarAction = (e) => {
-        if (e.code === "Space") {
+        if (e.code === 'Space') {
           e.preventDefault();
-
-          if (!isEditing && recordingState === "idle") {
+          if(hasRecordedCurrentPoint && !isEditing && recordingState === "idle" && currentPoint+1 == scriptPoints.length) {
+            finishRecording();
+          } else if (hasRecordedCurrentPoint && !isEditing && recordingState === "idle") {
+            handleNextPoint();
+          }
+          if (!isEditing && recordingState === "idle" ) {
             handleStartRecording();
           } else if (!isEditing && recordingState === "recording") {
             handleStopRecording();
           }
         }
+        if (e.code === 'ArrowLeft') {
+          handlePreviousPoint();
+        }
       };
 
       window.addEventListener("keydown", spaceBarAction);
       return () => window.removeEventListener("keydown", spaceBarAction);
-    }, [isEditing, recordingState]);
+    }, [isEditing, recordingState,hasRecordedCurrentPoint]);
 
   // Recording timer - starts immediately when component mounts
   useEffect(() => {
@@ -111,6 +118,12 @@ useEffect(() => {
     setHasRecordedCurrentPoint(false);
     setRecordingTime(0);
   };
+  const handlePreviousPoint = () => {
+    setCurrentPoint(currentPoint - 1);
+    setRecordingState('idle');
+    setIsRecording(false);
+    setHasRecordedCurrentPoint(false);
+  }
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -340,6 +353,12 @@ useEffect(() => {
       {/* Control Buttons */}
       {recordingState === 'idle' && currentPoint < scriptPoints.length && hasRecordedCurrentPoint && (
         <div className="p-6 flex justify-center space-x-4">
+          {currentPoint === 0 ? <></> : 
+          <Button
+            onClick={handlePreviousPoint}
+            className="bg-studio-accent text-studio-bg hover:bg-studio-accent/90">
+            Go back
+          </Button>}
           <Button
             variant="outline"
             onClick={handleRedoPoint}
