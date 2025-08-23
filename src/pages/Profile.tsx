@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Edit3, User, Mail, Calendar, Home, Plus, Settings, ExternalLink, LogOut, CreditCard, Bug, HelpCircle, UserPlus, MessageCircleQuestion, Upload, Image, Trash2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -23,9 +24,10 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  
-  
+  const location = useLocation();
+  const userInfo = location.state.userInfo
   const [isQuestionsDialogOpen, setIsQuestionsDialogOpen] = useState(false);
   const [isChallengesDialogOpen, setIsChallengesDialogOpen] = useState(false);
   const [profile, setProfile] = useState({
@@ -48,8 +50,8 @@ const Profile = () => {
   });
 
   const [isEditingUploadRate, setIsEditingUploadRate] = useState(false);
-  const [tempUploadRate, setTempUploadRate] = useState(profile.uploadRate);
-  const [tempUploadRatePeriod, setTempUploadRatePeriod] = useState(profile.uploadRatePeriod);
+  const [tempUploadRate, setTempUploadRate] = useState(userInfo.uploadRate);
+  const [tempUploadRatePeriod, setTempUploadRatePeriod] = useState(userInfo.uploadRatePeriod);
 
   // Challenge system state
   const [challenges, setChallenges] = useState([
@@ -73,7 +75,7 @@ const Profile = () => {
 
 
 
-  const [editForm, setEditForm] = useState(profile);
+  const [editForm, setEditForm] = useState(userInfo);
 
   const handleSave = () => {
     setProfile(editForm);
@@ -105,8 +107,8 @@ const Profile = () => {
 
 
   const handleEditUploadRate = () => {
-    setTempUploadRate(profile.uploadRate);
-    setTempUploadRatePeriod(profile.uploadRatePeriod);
+    setTempUploadRate(userInfo.uploadRate);
+    setTempUploadRatePeriod(userInfo.uploadRatePeriod);
     setIsEditingUploadRate(true);
   };
 
@@ -120,13 +122,17 @@ const Profile = () => {
   };
 
   const handleCancelUploadRate = () => {
-    setTempUploadRate(profile.uploadRate);
-    setTempUploadRatePeriod(profile.uploadRatePeriod);
+    setTempUploadRate(userInfo.uploadRate);
+    setTempUploadRatePeriod(userInfo.uploadRatePeriod);
     setIsEditingUploadRate(false);
   };
+  
+  const logout = () => {
+    navigate("/login");
+  }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-full bg-background flex flex-col">
       <div className="flex-1 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Profile Header */}
@@ -137,19 +143,19 @@ const Profile = () => {
                 <Avatar className="w-24 h-24">
                   <AvatarImage src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=200&h=200&fit=crop&crop=face" />
                   <AvatarFallback className="bg-studio-accent text-studio-bg text-2xl">
-                    {profile.name.split(' ').map(n => n[0]).join('')}
+                    {userInfo.name.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
                 
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold text-studio-text">{profile.name}</h1>
+                  <h1 className="text-3xl font-bold text-studio-text">{userInfo.name}</h1>
                   <div className="flex items-center space-x-2 text-studio-muted">
                     <Mail className="w-4 h-4" />
-                    <span>{profile.email}</span>
+                    <span>{userInfo?.email}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-studio-muted">
                     <Calendar className="w-4 h-4" />
-                    <span>Joined {profile.joinDate}</span>
+                    <span>Joined {userInfo.joinDate}</span>
                   </div>
                 </div>
               </div>
@@ -277,7 +283,7 @@ const Profile = () => {
           </CardHeader>
           
           <CardContent>
-            <p className="text-studio-muted leading-relaxed">{profile.bio}</p>
+            <p className="text-studio-muted leading-relaxed">{userInfo.bio}</p>
           </CardContent>
         </Card>
 
@@ -289,7 +295,7 @@ const Profile = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-studio-muted text-sm">Total Scripts</p>
-                  <p className="text-3xl font-bold text-studio-text">{profile.totalScripts}</p>
+                  <p className="text-3xl font-bold text-studio-text">{userInfo.totalScripts}</p>
                 </div>
                 <Badge variant="secondary" className="bg-studio-accent/20 text-studio-accent">
                   Active
@@ -303,7 +309,7 @@ const Profile = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-studio-muted text-sm">Recordings</p>
-                  <p className="text-3xl font-bold text-studio-text">{profile.totalRecordings}</p>
+                  <p className="text-3xl font-bold text-studio-text">{userInfo.totalRecordings}</p>
                 </div>
                 <Badge variant="secondary" className="bg-green-500/20 text-green-400">
                   Completed
@@ -318,7 +324,7 @@ const Profile = () => {
                  <div className="flex items-center justify-between">
                    <div>
                      <p className="text-studio-muted text-sm">Upload Rate</p>
-                     <p className="text-3xl font-bold text-studio-text">{profile.uploadRate}/{profile.uploadRatePeriod}</p>
+                     <p className="text-3xl font-bold text-studio-text">{userInfo.uploadRate}/{userInfo.uploadRatePeriod}</p>
                    </div>
                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-400">
                      Target
@@ -445,6 +451,7 @@ const Profile = () => {
                   <Button
                     variant="outline"
                     className="bg-studio-bg border-studio-border text-studio-text hover:bg-studio-accent hover:text-studio-bg flex items-center justify-start space-x-3 p-4 h-auto"
+                    onClick={logout}
                   >
                     <LogOut className="w-5 h-5" />
                     <span>Sign out</span>
@@ -458,7 +465,7 @@ const Profile = () => {
       </div>
       
       {/* Bottom Navigation */}
-      <footer className="border-t border-border p-4 md:p-8 mt-8">
+      <footer className="absolute bottom-0 left-0 right-0 border-t border-border px-4 py-3 md:p-8 safe-area-pb bg-studio-card">
         <div className="flex items-center justify-center space-x-4 md:space-x-8">
           <Button
             variant="ghost"
@@ -466,7 +473,7 @@ const Profile = () => {
             asChild
             className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
-            <NavLink to="/">
+            <NavLink to="/" state={ {userInfo} }>
               <Home className="h-5 w-5 md:h-6 md:w-6" />
               <span className="text-xs md:text-sm">Studio</span>
             </NavLink>
@@ -478,7 +485,7 @@ const Profile = () => {
             asChild
             className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
-            <NavLink to="/">
+            <NavLink to="/" state={ {userInfo} }>
               <Plus className="h-5 w-5 md:h-6 md:w-6" />
               <span className="text-xs md:text-sm">New Project</span>
             </NavLink>

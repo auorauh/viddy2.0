@@ -15,12 +15,13 @@ interface MainContentProps {
   scripts: ScriptBoard[];
   activeFolder: string;
   folders: Array<Folder>;
+  userInfo: string;
   onScriptSelect: (script: ScriptBoard) => void;
   onNewProject: (folderId: string) => void;
   onFolderChange: (folderId: string) => void;
 }
 
-export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, onNewProject, onFolderChange }: MainContentProps) => {
+export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScriptSelect, onNewProject, onFolderChange }: MainContentProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const scriptsPerPage = 6;
   
@@ -180,7 +181,7 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             asChild
             className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
-            <NavLink to="/profile">
+            <NavLink to="/profile" state={{ userInfo} }>
               <User className="h-4 w-4 md:h-5 md:w-5" />
               <span className="text-xs md:text-sm">Profile</span>
             </NavLink>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom"
 import { MainContent } from "@/components/studio/MainContent";
 import { ScriptEditor } from "@/components/studio/ScriptEditor";
 import { CameraSync } from "@/components/studio/CameraSync";
@@ -17,6 +18,9 @@ export interface ScriptBoard {
 export type ViewMode = 'boards' | 'editor' | 'camera-sync' | 'teleprompter' | 'finish';
 
 const Studio = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const user = location.state?.userInfo;
   const [scripts, setScripts] = useState<ScriptBoard[]>([
     {
       id: '1',
@@ -43,6 +47,12 @@ const Studio = () => {
       updatedAt: new Date(),
     },
   ]);
+      useEffect(() => {
+        //navigate to login page if no user is defined
+        if (user === undefined) {
+          navigate('/login');
+        }
+    }, []);
 
   const [activeFolder, setActiveFolder] = useState<string>('4');
   const [viewMode, setViewMode] = useState<ViewMode>('boards');
@@ -107,6 +117,7 @@ const Studio = () => {
           onScriptSelect={handleScriptSelect}
           onNewProject={handleNewProject}
           onFolderChange={setActiveFolder}
+          userInfo={user}
         />
       )}
       
