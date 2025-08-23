@@ -66,7 +66,9 @@ useEffect(() => {
           }
         }
         if (e.code === 'ArrowLeft') {
-          handlePreviousPoint();
+          if(currentPoint !== 0) {
+            handlePreviousPoint();
+          }
         }
       };
 
@@ -79,7 +81,6 @@ useEffect(() => {
     const timer = setInterval(() => {
       setRecordingTime(prev => prev + 1);
     }, 1000);
-    return () => clearInterval(timer);
   }, []);
 
   const checkScreen = () => {
@@ -91,7 +92,6 @@ useEffect(() => {
 
   const handleStartRecording = () => {
     setCountdown(3);
-    setRecordingTime(0);
     setRecordingState('countdown');
   };
 
@@ -99,7 +99,6 @@ useEffect(() => {
     setRecordingState('idle');
     setIsRecording(false);
     setHasRecordedCurrentPoint(true);
-    setRecordingTime(0);
   };
 
   const handleNextPoint = () => {
@@ -108,7 +107,6 @@ useEffect(() => {
       setRecordingState('idle');
       setIsRecording(false);
       setHasRecordedCurrentPoint(false);
-      setRecordingTime(0);
     }
   };
 
@@ -116,7 +114,6 @@ useEffect(() => {
     setRecordingState('idle');
     setIsRecording(false);
     setHasRecordedCurrentPoint(false);
-    setRecordingTime(0);
   };
   const handlePreviousPoint = () => {
     setCurrentPoint(currentPoint - 1);
