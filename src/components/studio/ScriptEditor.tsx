@@ -569,7 +569,7 @@ const handleDragEnd = (result: DropResult) => {
                                   </div>
                                 ) : (
                                   <>
-                                    <p className="text-white text-base leading-relaxed flex-1">
+                                    <p className="text-white text-base leading-relaxed flex-1" onClick={()=>handleEditPoint(index)}>
                                       {line.trim()}
                                     </p>
                                     <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">

@@ -348,7 +348,7 @@ useEffect(() => {
               </div>
             </div>
           ) : (
-            <p className="w-full text-white text-4xl leading-relaxed font-light" style={{ fontSize: `${fontSize}rem` }}>
+            <p className="w-full text-white text-4xl leading-relaxed font-bold" style={{ fontSize: `${fontSize}rem` }}>
               {currentText}
             </p>
           )}

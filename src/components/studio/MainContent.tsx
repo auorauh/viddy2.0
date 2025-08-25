@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, ChevronLeft, ChevronRight, Plus, Home, User } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Plus, Home, User,X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,11 +17,12 @@ interface MainContentProps {
   folders: Array<Folder>;
   userInfo: string;
   onScriptSelect: (script: ScriptBoard) => void;
+  onDeleteScript: (id: string) => void;
   onNewProject: (folderId: string) => void;
   onFolderChange: (folderId: string) => void;
 }
 
-export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScriptSelect, onNewProject, onFolderChange }: MainContentProps) => {
+export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScriptSelect,onDeleteScript, onNewProject, onFolderChange }: MainContentProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const scriptsPerPage = 6;
 
@@ -44,6 +45,10 @@ export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScript
   const handleNewProject = () => {
     onNewProject(activeFolder);
   };
+  const deleteScript = (id: string) =>{
+    console.log("delete");
+    onDeleteScript(id);
+  }
 
 
   return (
@@ -135,13 +140,32 @@ export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScript
       <main className="flex-1 px-4 py-3 md:p-6 overflow-auto">
         <div className="max-w-full mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center sm:justify-items-stretch">
-            {currentScripts.length === 0 ? <>No projects yet. Click + New Project to create your first card.</> : <></>}
+            {currentScripts.length === 0 ? 
+            <div
+                className="relative bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col w-full max-w-sm sm:max-w-none"
+              >
+                <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
+                  Click + New Project to create your first card.
+                </h3>
+              </div>
+            : <></>}
             {currentScripts.map((script) => (
               <div
                 key={script.id}
-                className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col w-full max-w-sm sm:max-w-none"
+                className="relative bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col w-full max-w-sm sm:max-w-none"
                 onClick={() => onScriptSelect(script)}
               >
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 h-6 w-6 text-studio-muted hover:text-red-500"
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent triggering onScriptSelect
+                  deleteScript(script.id);
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
                 <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
                   {script.title}
                 </h3>

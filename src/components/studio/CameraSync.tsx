@@ -8,36 +8,11 @@ interface CameraSyncProps {
 
 export const CameraSync = ({ onSync, onBack }: CameraSyncProps) => {
   const playBellSound = () => {
-    // Create a simple bell sound using Web Audio API
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    
-    // Create a bell-like sound with multiple frequencies
-    const frequencies = [800, 1000, 1200];
-    const duration = 0.8;
-    
-    frequencies.forEach((freq, index) => {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator.frequency.value = freq;
-      oscillator.type = 'sine';
-      
-      // Bell envelope
-      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.3 / (index + 1), audioContext.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + duration);
-    });
-    
-    // Navigate to teleprompter after bell sound
-    setTimeout(() => {
-      onSync();
-    }, 1000);
+    const audio = new Audio("/beep-01a.mp3"); // path from public folder
+    audio.play();
+      setTimeout(() => {
+        onSync();
+      }, 1000);
   };
 
   return (

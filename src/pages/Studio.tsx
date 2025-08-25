@@ -68,6 +68,7 @@ const Studio = () => {
       updatedAt: new Date(),
     };
     setScripts(prev => [...prev, newScript]);
+    //TODO : Needs to add board in server
   };
 
   const handleScriptSelect = (script: ScriptBoard) => {
@@ -98,7 +99,7 @@ const Studio = () => {
   const filteredScripts = scripts.filter(script => 
     activeFolder === '1' ? true : script.folderId === activeFolder
   );
-  const logScript = (id: string, newContent: string[]) => {
+  const updateScript = (id: string, newContent: string[]) => {
   setScripts(prevScripts =>
     prevScripts.map(script =>
       script.id === id
@@ -106,6 +107,13 @@ const Studio = () => {
         : script
     )
   );
+  //TODO : Needs to update boards in server
+  }
+  const deleteScript = (id: string) => {
+    setScripts(prevScripts =>
+    prevScripts.filter(script => script.id !== id)
+  );
+  //TODO : Needs to update boards in server
   }
 
   const folders = [
@@ -124,6 +132,7 @@ const Studio = () => {
           activeFolder={activeFolder}
           folders={folders}
           onScriptSelect={handleScriptSelect}
+          onDeleteScript={deleteScript}
           onNewProject={handleNewProject}
           onFolderChange={setActiveFolder}
           userInfo={user}
@@ -133,7 +142,7 @@ const Studio = () => {
       {viewMode === 'editor' && activeScript && (
         <ScriptEditor 
           script={activeScript}
-          onScriptUpdate={logScript}
+          onScriptUpdate={updateScript}
           onRecord={handleRecord}
           onBack={handleBackToBoards}
         />
