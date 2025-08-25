@@ -18,11 +18,12 @@ import type { ScriptBoard } from "../../pages/Studio";
 
 interface ScriptEditorProps {
   script: ScriptBoard;
+  onScriptUpdate: (id: string,newValue: string[]) => void;
   onRecord: () => void;
   onBack: () => void;
 }
 
-export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) => {
+export const ScriptEditor = ({ script,onScriptUpdate, onRecord, onBack }: ScriptEditorProps) => {
   const { toast } = useToast();
   const [title, setTitle] = useState(script.title);
   const [content, setContent] = useState(script.content);
@@ -197,11 +198,10 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
   // Script point management
   const handleAddPoint = () => {
-    if (newPoint.trim()) {
-      const updatedContent = content ? `${content}\n${newPoint.trim()}` : newPoint.trim();
-      setContent(updatedContent);
+      const point = newPoint.trim();
+      if (!point) return;
+      setContent(prevContent => [...prevContent, point]);
       setNewPoint("");
-    }
   };
 
   const handlePointKeyPress = (e: React.KeyboardEvent) => {
@@ -213,16 +213,16 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
   // Point editing functions
   const handleEditPoint = (index: number) => {
-    const lines = content.split('\n').filter(line => line.trim());
+    const lines = content;
     setEditingPointIndex(index);
     setEditingPointText(lines[index] || "");
   };
 
   const handleSavePoint = () => {
     if (editingPointIndex !== null && editingPointText.trim()) {
-      const lines = content.split('\n').filter(line => line.trim());
+      const lines = content;
       lines[editingPointIndex] = editingPointText.trim();
-      setContent(lines.join('\n'));
+      setContent(lines);
       setEditingPointIndex(null);
       setEditingPointText("");
     }
@@ -234,9 +234,9 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   };
 
   const handleDeletePoint = (index: number) => {
-    const lines = content.split('\n').filter(line => line.trim());
-    lines.splice(index, 1);
-    setContent(lines.join('\n'));
+    const newContent = [...content];
+    newContent.splice(index, 1);
+    setContent(newContent);
   };
 
   // Script import functionality
@@ -259,7 +259,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
       const formattedContent = lines.map(line => line.trim()).join('\n');
       
       // Add to existing content or replace it
-      const updatedContent = content ? `${content}\n${formattedContent}` : formattedContent;
+      const updatedContent = content ? [...content, formattedContent] : [formattedContent];
       setContent(updatedContent);
       
       // Clear import text and close dialog
@@ -364,28 +364,30 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   };
 
   // Drag and drop functionality for script points
-  const handleDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
+const handleDragEnd = (result: DropResult) => {
+  const { destination, source } = result;
 
-    // If dropped outside the list or in the same position, do nothing
-    if (!destination || (destination.index === source.index)) {
-      return;
-    }
+  // If dropped outside the list or in the same position, do nothing
+  if (!destination || destination.index === source.index) {
+    return;
+  }
+  // Copy current content (array of strings)
+  const lines = [...content];
 
-    // Reorder the script points
-    const lines = content.split('\n').filter(line => line.trim());
-    const [reorderedItem] = lines.splice(source.index, 1);
-    lines.splice(destination.index, 0, reorderedItem);
-    
-    // Update content with reordered points
-    setContent(lines.join('\n'));
-    
-    // Reset editing state if we were editing a point
-    if (editingPointIndex !== null) {
-      setEditingPointIndex(null);
-      setEditingPointText("");
-    }
-  };
+  // Reorder the script points
+  const [reorderedItem] = lines.splice(source.index, 1);
+  lines.splice(destination.index, 0, reorderedItem);
+
+  // Update content with reordered points (no join needed)
+  onScriptUpdate(script.id, lines);
+  setContent(lines);
+
+  // Reset editing state if we were editing a point
+  if (editingPointIndex !== null) {
+    setEditingPointIndex(null);
+    setEditingPointText("");
+  }
+};
 
   return (
     <div className="flex-1 flex flex-col">
@@ -516,7 +518,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                         ref={provided.innerRef}
                         className="space-y-3"
                       >
-                        {content.split('\n').filter(line => line.trim()).map((line, index) => (
+                        {content.map((line, index) => (
                           <Draggable key={`point-${index}`} draggableId={`point-${index}`} index={index}>
                             {(provided, snapshot) => (
                               <div 
@@ -595,7 +597,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                           </Draggable>
                         ))}
                         {provided.placeholder}
-                        {(!content || content.trim() === '') && (
+                        {(!content || content.length === 0) && (
                           <div className="text-studio-muted text-base italic text-center py-8">
                             No script content yet. Add content to see numbered talking points.
                           </div>

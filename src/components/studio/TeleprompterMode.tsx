@@ -24,13 +24,11 @@ export const TeleprompterMode = ({ script, onBack, onFinish }: TeleprompterModeP
   const [isSmall, setIsSmall] = useState(false);
   const [mobileView, setMobile] = useState(false);
   const [fontSize, setFontSize] = useState(5);
+  const [contentNew, setContentNew] = useState(['Point 1', 'Point 2', 'Point 3']);
 
   // Break script into bullet points/sentences
 useEffect(() => {
   const points = script.content
-    .split(/[.!?]+/)
-    .map(point => point.trim())
-    .filter(point => point.length > 10);
   setScriptPoints(points);
 
   checkScreen();
@@ -54,16 +52,26 @@ useEffect(() => {
       const spaceBarAction = (e) => {
         if (e.code === 'Space') {
           e.preventDefault();
-          if(hasRecordedCurrentPoint && !isEditing && recordingState === "idle" && currentPoint+1 == scriptPoints.length) {
-            finishRecording();
-          } else if (hasRecordedCurrentPoint && !isEditing && recordingState === "idle") {
-            handleNextPoint();
-          }
-          if (!isEditing && recordingState === "idle" ) {
-            handleStartRecording();
-          } else if (!isEditing && recordingState === "recording") {
-            handleStopRecording();
-          }
+          // Skip actions if editing
+            if (isEditing) return;
+
+            // Idle state
+            if (recordingState === "idle") {
+              if (hasRecordedCurrentPoint) {
+                // Last point
+                if (currentPoint + 1 === scriptPoints.length) {
+                  finishRecording();
+                } else {
+                  handleNextPoint();
+                }
+              } else {
+                handleStartRecording();
+              }
+            }
+            // If currently Recording - stop
+            if (recordingState === "recording") {
+              handleStopRecording();
+            }
         }
         if (e.code === 'ArrowLeft') {
           if(currentPoint !== 0) {
@@ -225,20 +233,12 @@ useEffect(() => {
                   value={fontSize}
                   onChange={(e) => setFontSize(Number(e.target.value))}
                   className="
-                    w-[150px] h-2
+                    w-[100px] h-2
                     bg-gray-300 rounded-lg appearance-none cursor-pointer
                     accent-yellow-500
                   "
                 />
           </>
-          }
-          {mobileView ? <></> : 
-          <button
-            onClick={openTeleprompterWindow}
-            className="text-sm text-white hover:text-white/80 underline cursor-pointer"
-          >
-            Teleprompter
-          </button>
           }
           <div className="flex-1 bg-white/20 h-2 rounded-full max-w-32">
             <div 
@@ -255,6 +255,14 @@ useEffect(() => {
         
         {/* Edit and Pause buttons moved to absolute far right */}
         <div className="absolute right-6 flex items-center space-x-2">
+          {mobileView ? <></> : 
+          <button
+            onClick={openTeleprompterWindow}
+            className="text-sm text-white hover:text-white/80 underline cursor-pointer"
+          >
+            Teleprompter
+          </button>
+          }
           <Button
             variant="ghost"
             size="sm"
@@ -316,7 +324,7 @@ useEffect(() => {
           )}
           
           {isEditing ? (
-            <div className="w-full max-w-2xl">
+            <div className="w-full">
               <Textarea
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}

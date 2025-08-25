@@ -9,7 +9,7 @@ import { Finish } from "@/components/studio/Finish";
 export interface ScriptBoard {
   id: string;
   title: string;
-  content: string;
+  content: string[];
   folderId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -25,7 +25,7 @@ const Studio = () => {
     {
       id: '1',
       title: 'How to Kickflip',
-      content: 'Today I\'m going to teach you the secret to landing your first kickflip coming from a lifelong skateboarding vet OG. This is going to be a comprehensive guide that breaks down every aspect of the kickflip technique. 123456789. 12345678910.',
+      content: ['Today I\'m going to teach you the secret to landing your first kickflip coming from a lifelong skateboarding vet OG.', 'This is going to be a comprehensive guide that breaks down every aspect of the kickflip technique.', '123456789. 12345678910.'],
       folderId: '4',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -33,7 +33,7 @@ const Studio = () => {
     {
       id: '2',
       title: 'Origin Story',
-      content: 'My journey into content creation started when I realized the power of storytelling through video. This is the story of how everything began.',
+      content: ['My journey into content creation started when I realized the power of storytelling through video. This is the story of how everything began.'],
       folderId: '4',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -41,7 +41,7 @@ const Studio = () => {
     {
       id: '3',
       title: 'Casey Neistats tips for success',
-      content: 'What I learned from studying the master of daily vlogs and how you can apply these principles to your own content creation journey.',
+      content: ['Point 1','Point 2'],
       folderId: '4',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -62,7 +62,7 @@ const Studio = () => {
     const newScript: ScriptBoard = {
       id: Date.now().toString(),
       title: 'New Project',
-      content: '',
+      content: [''],
       folderId: folderId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -98,6 +98,15 @@ const Studio = () => {
   const filteredScripts = scripts.filter(script => 
     activeFolder === '1' ? true : script.folderId === activeFolder
   );
+  const logScript = (id: string, newContent: string[]) => {
+  setScripts(prevScripts =>
+    prevScripts.map(script =>
+      script.id === id
+        ? { ...script, content: newContent, updatedAt: new Date() } // update content
+        : script
+    )
+  );
+  }
 
   const folders = [
     { id: '1', name: 'All Scripts', isActive: true },
@@ -124,6 +133,7 @@ const Studio = () => {
       {viewMode === 'editor' && activeScript && (
         <ScriptEditor 
           script={activeScript}
+          onScriptUpdate={logScript}
           onRecord={handleRecord}
           onBack={handleBackToBoards}
         />

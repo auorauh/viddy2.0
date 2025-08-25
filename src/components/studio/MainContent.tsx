@@ -24,7 +24,7 @@ interface MainContentProps {
 export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScriptSelect, onNewProject, onFolderChange }: MainContentProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const scriptsPerPage = 6;
-  
+
   const activeFolderName = folders.find(f => f.id === activeFolder)?.name || 'All Scripts';
   
   // Pagination logic
@@ -44,6 +44,7 @@ export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScript
   const handleNewProject = () => {
     onNewProject(activeFolder);
   };
+
 
   return (
     <div className="h-full flex flex-col">
@@ -134,6 +135,7 @@ export const MainContent = ({ scripts, activeFolder, folders, userInfo, onScript
       <main className="flex-1 px-4 py-3 md:p-6 overflow-auto">
         <div className="max-w-full mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center sm:justify-items-stretch">
+            {currentScripts.length === 0 ? <>No projects yet. Click + New Project to create your first card.</> : <></>}
             {currentScripts.map((script) => (
               <div
                 key={script.id}
