@@ -15,31 +15,32 @@ interface MainContentProps {
   scripts: ScriptBoard[];
   activeFolder: string;
   folders: Array<Folder>;
+  currentProject?: any; // Project type
   onScriptSelect: (script: ScriptBoard) => void;
   onNewProject: (folderId: string) => void;
   onFolderChange: (folderId: string) => void;
 }
 
-export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, onNewProject, onFolderChange }: MainContentProps) => {
+export const MainContent = ({ scripts, activeFolder, folders, currentProject, onScriptSelect, onNewProject, onFolderChange }: MainContentProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const scriptsPerPage = 6;
-  
+
   const activeFolderName = folders.find(f => f.id === activeFolder)?.name || 'All Scripts';
-  
+
   // Pagination logic
   const totalPages = Math.ceil(scripts.length / scriptsPerPage);
   const startIndex = (currentPage - 1) * scriptsPerPage;
   const endIndex = startIndex + scriptsPerPage;
   const currentScripts = scripts.slice(startIndex, endIndex);
-  
+
   const handlePrevPage = () => {
     setCurrentPage(prev => Math.max(1, prev - 1));
   };
-  
+
   const handleNextPage = () => {
     setCurrentPage(prev => Math.min(totalPages, prev + 1));
   };
-  
+
   const handleNewProject = () => {
     onNewProject(activeFolder);
   };
@@ -51,22 +52,28 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       <header className="p-6 border-b border-border hidden md:block">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
+            {currentProject && (
+              <div className="flex items-center space-x-2">
+                <h2 className="text-lg font-semibold text-studio-text">{currentProject.title}</h2>
+                <span className="text-sm text-studio-muted">•</span>
+              </div>
+            )}
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-studio-muted" />
-              <Input 
+              <Input
                 placeholder="Search"
                 className="w-80 pl-10 pr-4 bg-studio-card border-border text-studio-text"
               />
             </div>
           </div>
-          
+
           <div className="absolute left-1/2 transform -translate-x-1/2"></div>
-          
-           <div className="flex items-center space-x-4">
-             <div className="flex items-center space-x-2 text-studio-muted">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-studio-muted">
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
                 className="p-1"
@@ -74,9 +81,9 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <span>{currentPage}/{totalPages || 1}</span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages || totalPages === 0}
                 className="p-1"
@@ -90,25 +97,28 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
 
       {/* Mobile Header */}
       <header className="px-4 py-3 space-y-3 border-b border-border md:hidden">
-        {/* Folder name */}
+        {/* Project name */}
         <div className="text-center">
+          {currentProject && (
+            <h2 className="text-lg font-semibold text-studio-text">{currentProject.title}</h2>
+          )}
         </div>
-        
+
         {/* Search bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-studio-muted" />
-          <Input 
+          <Input
             placeholder="Search scripts..."
             className="w-full pl-10 pr-4 bg-studio-card border-border text-studio-text h-10"
           />
         </div>
-        
+
         {/* Pagination */}
         <div className="flex items-center justify-center">
           <div className="flex items-center space-x-1 text-studio-muted">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handlePrevPage}
               disabled={currentPage === 1}
               className="h-8 w-8 p-0"
@@ -116,9 +126,9 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm px-2">{currentPage}/{totalPages || 1}</span>
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleNextPage}
               disabled={currentPage === totalPages || totalPages === 0}
               className="h-8 w-8 p-0"
@@ -132,22 +142,43 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
       {/* Content */}
       <main className="flex-1 px-4 py-3 md:p-6 overflow-auto">
         <div className="max-w-full mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center sm:justify-items-stretch">
-            {currentScripts.map((script) => (
-              <div
-                key={script.id}
-                className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col w-full max-w-sm sm:max-w-none"
-                onClick={() => onScriptSelect(script)}
-              >
-                <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
-                  {script.title}
-                </h3>
-                <p className="text-studio-muted text-sm line-clamp-3 flex-1">
-                  {script.content}
+          {scripts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
+              <div className="bg-studio-card rounded-lg p-8 max-w-md">
+                <div className="w-16 h-16 bg-studio-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Plus className="w-8 h-8 text-studio-accent" />
+                </div>
+                <h3 className="text-xl font-semibold text-studio-text mb-2">No Scripts Yet</h3>
+                <p className="text-studio-muted mb-6">
+                  Create your first script to start building your video content. You can add talking points, organize your thoughts, and record when ready.
                 </p>
+                <Button
+                  onClick={handleNewProject}
+                  className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Your First Script
+                </Button>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 justify-items-center sm:justify-items-stretch">
+              {currentScripts.map((script) => (
+                <div
+                  key={script.id}
+                  className="bg-studio-card rounded-lg p-4 md:p-6 cursor-pointer hover:bg-accent transition-colors border border-border min-h-[120px] md:min-h-[140px] flex flex-col w-full max-w-sm sm:max-w-none"
+                  onClick={() => onScriptSelect(script)}
+                >
+                  <h3 className="text-base md:text-lg font-semibold text-studio-text mb-2 md:mb-3 line-clamp-2">
+                    {script.title}
+                  </h3>
+                  <p className="text-studio-muted text-sm line-clamp-3 flex-1">
+                    {script.content || "No content yet - click to start writing your script"}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
 
@@ -159,10 +190,12 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             size="lg"
             className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
-            <Home className="h-4 w-4 md:h-5 md:w-5" />
-            <span className="text-xs md:text-sm">Studio</span>
+            <NavLink to="/dashboard" className="flex">
+              <Home className="h-4 w-4 md:h-5 md:w-5 mr-5" />
+              <span className="text-xs md:text-sm">Studio</span>
+            </NavLink>
           </Button>
-          
+
           <Button
             variant="ghost"
             size="lg"
@@ -170,16 +203,16 @@ export const MainContent = ({ scripts, activeFolder, folders, onScriptSelect, on
             className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
           >
             <Plus className="h-4 w-4 md:h-5 md:w-5" />
-            <span className="text-xs md:text-sm">New Project</span>
+            <span className="text-xs md:text-sm">New Script</span>
           </Button>
 
-          
+
           <Button
             variant="ghost"
             size="lg"
             asChild
-            className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
-          >
+          className="flex items-center space-x-2 md:space-x-3 text-studio-text hover:text-studio-accent h-auto py-3 md:py-4 px-4 md:px-6"
+        >
             <NavLink to="/profile">
               <User className="h-4 w-4 md:h-5 md:w-5" />
               <span className="text-xs md:text-sm">Profile</span>

@@ -37,7 +37,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [importText, setImportText] = useState("");
   const [splitMethod, setSplitMethod] = useState("line");
-  
+
   // Shot List and Gear List state
   const [shotList, setShotList] = useState([
     { id: "1", text: "Wide establishing shot", checked: false },
@@ -52,7 +52,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   ]);
   const [newShotItem, setNewShotItem] = useState("");
   const [newGearItem, setNewGearItem] = useState("");
-  
+
   // Editor Guides state
   const [editorGuides, setEditorGuides] = useState<{
     id: string;
@@ -60,7 +60,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     versions: { fileName: string; uploadDate: Date }[];
   }[]>([]);
   const [editorNotes, setEditorNotes] = useState("");
-  
+
   // Schedule management state
   const [scheduleItems, setScheduleItems] = useState([
     { id: "1", scene: "Scene 1: Opening", startTime: "09:00", duration: "30", description: "Main character introduction" },
@@ -93,7 +93,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   };
 
   const handleScheduleItemChange = (id: string, field: string, value: string) => {
-    setScheduleItems(scheduleItems.map(item => 
+    setScheduleItems(scheduleItems.map(item =>
       item.id === id ? { ...item, [field]: value } : item
     ));
   };
@@ -139,7 +139,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   };
 
   const handleRoleChange = (id: string, newRole: "owner" | "editor" | "viewer") => {
-    setTeamMembers(teamMembers.map(member => 
+    setTeamMembers(teamMembers.map(member =>
       member.id === id ? { ...member, role: newRole } : member
     ));
   };
@@ -181,11 +181,11 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
       });
       return;
     }
-    
+
     const subject = `Check out my Viddy board: ${title}`;
     const body = `I wanted to share my Viddy board with you!\n\nBoard: ${title}\nView it here: ${shareUrl}`;
     const mailtoUrl = `mailto:${emailRecipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
+
     window.open(mailtoUrl, '_blank');
     setEmailRecipient("");
     setShareDialogOpen(false);
@@ -243,7 +243,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   const handleImportScript = () => {
     if (importText.trim()) {
       let lines: string[] = [];
-      
+
       if (splitMethod === "sentence") {
         // Split by sentences - look for periods, exclamation marks, and question marks
         lines = importText
@@ -254,18 +254,18 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
         // Split by line breaks (default)
         lines = importText.split('\n').filter(line => line.trim());
       }
-      
+
       // Format each line as a bullet point and join them
       const formattedContent = lines.map(line => line.trim()).join('\n');
-      
+
       // Add to existing content or replace it
       const updatedContent = content ? `${content}\n${formattedContent}` : formattedContent;
       setContent(updatedContent);
-      
+
       // Clear import text and close dialog
       setImportText("");
       setImportDialogOpen(false);
-      
+
       toast({
         title: "Script imported!",
         description: `Successfully imported ${lines.length} talking points.`,
@@ -275,13 +275,13 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
   // List management functions
   const handleShotListCheck = (id: string) => {
-    setShotList(prev => prev.map(item => 
+    setShotList(prev => prev.map(item =>
       item.id === id ? { ...item, checked: !item.checked } : item
     ));
   };
 
   const handleGearListCheck = (id: string) => {
-    setGearList(prev => prev.map(item => 
+    setGearList(prev => prev.map(item =>
       item.id === id ? { ...item, checked: !item.checked } : item
     ));
   };
@@ -318,7 +318,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
   // Editor Guides management functions
   const handlePartNameChange = (partId: string, newName: string) => {
-    setEditorGuides(prev => prev.map(part => 
+    setEditorGuides(prev => prev.map(part =>
       part.id === partId ? { ...part, partName: newName } : part
     ));
   };
@@ -328,26 +328,26 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
   };
 
   const handleAddVersion = (partId: string) => {
-    setEditorGuides(prev => prev.map(part => 
-      part.id === partId 
-        ? { 
-            ...part, 
-            versions: [...part.versions, { 
-              fileName: `Editor_Guide_${part.partName}_v${part.versions.length + 1}.pdf`, 
-              uploadDate: new Date() 
-            }] 
-          }
+    setEditorGuides(prev => prev.map(part =>
+      part.id === partId
+        ? {
+          ...part,
+          versions: [...part.versions, {
+            fileName: `Editor_Guide_${part.partName}_v${part.versions.length + 1}.pdf`,
+            uploadDate: new Date()
+          }]
+        }
         : part
     ));
   };
 
   const handleRemoveVersion = (partId: string, versionIndex: number) => {
-    setEditorGuides(prev => prev.map(part => 
-      part.id === partId 
-        ? { 
-            ...part, 
-            versions: part.versions.filter((_, index) => index !== versionIndex) 
-          }
+    setEditorGuides(prev => prev.map(part =>
+      part.id === partId
+        ? {
+          ...part,
+          versions: part.versions.filter((_, index) => index !== versionIndex)
+        }
         : part
     ));
   };
@@ -376,10 +376,10 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
     const lines = content.split('\n').filter(line => line.trim());
     const [reorderedItem] = lines.splice(source.index, 1);
     lines.splice(destination.index, 0, reorderedItem);
-    
+
     // Update content with reordered points
     setContent(lines.join('\n'));
-    
+
     // Reset editing state if we were editing a point
     if (editingPointIndex !== null) {
       setEditingPointIndex(null);
@@ -408,7 +408,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               className="text-xl font-bold bg-transparent border border-border rounded px-3 py-1 min-w-[200px]"
             />
           </div>
-          
+
           <div className="flex items-center space-x-3 pt-3">
             <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
               <DialogTrigger asChild>
@@ -435,7 +435,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       className="min-h-[200px] resize-none"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="split-method">Split:</Label>
                     <Select value={splitMethod} onValueChange={setSplitMethod}>
@@ -448,7 +448,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div className="flex space-x-2 justify-end">
                     <Button
                       variant="outline"
@@ -484,19 +484,19 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
       <div className="flex-1 p-6">
         <Tabs defaultValue="script" className="h-full">
           <TabsList className="bg-studio-card border border-border">
-            <TabsTrigger 
-              value="script" 
+            <TabsTrigger
+              value="script"
               className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
             >
               Script
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="details"
               className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
             >
               Details
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="editing"
               className="data-[state=active]:bg-studio-accent data-[state=active]:text-studio-bg"
             >
@@ -511,20 +511,19 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                 <DragDropContext onDragEnd={handleDragEnd}>
                   <Droppable droppableId="script-points">
                     {(provided) => (
-                      <div 
-                        {...provided.droppableProps} 
+                      <div
+                        {...provided.droppableProps}
                         ref={provided.innerRef}
                         className="space-y-3"
                       >
                         {content.split('\n').filter(line => line.trim()).map((line, index) => (
                           <Draggable key={`point-${index}`} draggableId={`point-${index}`} index={index}>
                             {(provided, snapshot) => (
-                              <div 
+                              <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className={`bg-black/40 rounded-lg p-4 flex items-start space-x-4 group ${
-                                  snapshot.isDragging ? 'shadow-lg ring-2 ring-white/20' : ''
-                                }`}
+                                className={`bg-black/40 rounded-lg p-4 flex items-start space-x-4 group ${snapshot.isDragging ? 'shadow-lg ring-2 ring-white/20' : ''
+                                  }`}
                               >
                                 <div {...provided.dragHandleProps} className="flex items-center space-x-2">
                                   <GripVertical className="w-4 h-4 text-white/40 hover:text-white/80 cursor-grab active:cursor-grabbing" />
@@ -596,8 +595,15 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                         ))}
                         {provided.placeholder}
                         {(!content || content.trim() === '') && (
-                          <div className="text-studio-muted text-base italic text-center py-8">
-                            No script content yet. Add content to see numbered talking points.
+                          <div className="text-studio-muted text-base italic text-center py-12">
+                            <div className="space-y-2">
+                              <p className="text-lg">No talking points yet</p>
+                              <p className="text-sm">Use the input field below to add your first talking point</p>
+                              <div className="flex items-center justify-center space-x-2 text-xs opacity-75 mt-4">
+                                <Plus className="w-3 h-3" />
+                                <span>Type your point and press Enter or click "Add Point"</span>
+                              </div>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -605,17 +611,25 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                   </Droppable>
                 </DragDropContext>
               </div>
-              
-              {/* Typing Bar */}
+
+              {/* Add Point Bar */}
               <div className="p-4 border-t border-border bg-black/20">
                 <div className="flex space-x-3">
                   <Input
                     value={newPoint}
                     onChange={(e) => setNewPoint(e.target.value)}
                     onKeyDown={handlePointKeyPress}
-                    placeholder="Enter Point Text..."
+                    placeholder="Add a new talking point... (Press Enter to add)"
                     className="flex-1 bg-black/40 border-studio-border text-white placeholder:text-studio-muted"
                   />
+                  <Button
+                    onClick={handleAddPoint}
+                    disabled={!newPoint.trim()}
+                    className="bg-studio-accent hover:bg-studio-accent/90 text-studio-bg px-4"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Point
+                  </Button>
                 </div>
               </div>
             </div>
@@ -627,9 +641,9 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="location" className="text-sm font-medium text-studio-text">Location</Label>
-                  <Input 
-                    id="location" 
-                    placeholder="Enter shooting location" 
+                  <Input
+                    id="location"
+                    placeholder="Enter shooting location"
                     className="bg-studio-bg border-studio-border text-studio-text"
                   />
                 </div>
@@ -658,9 +672,9 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
                 <div className="space-y-2">
                   <Label htmlFor="callTime" className="text-sm font-medium text-studio-text">Call Time</Label>
-                  <Input 
-                    id="callTime" 
-                    type="time" 
+                  <Input
+                    id="callTime"
+                    type="time"
                     className="bg-studio-bg border-studio-border text-studio-text"
                   />
                 </div>
@@ -689,14 +703,14 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
 
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="notes" className="text-sm font-medium text-studio-text">Notes</Label>
-                  <Textarea 
-                    id="notes" 
+                  <Textarea
+                    id="notes"
                     placeholder="Add any additional notes or special instructions..."
                     className="min-h-[80px] bg-studio-bg border-studio-border text-studio-text"
                   />
                 </div>
               </div>
-              
+
               {/* Lists Section moved from Lists tab */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {/* Shot List */}
@@ -707,7 +721,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       {shotList.filter(item => item.checked).length}/{shotList.length}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-3 max-h-64 overflow-y-auto mb-4">
                     {shotList.map((item) => (
                       <div key={item.id} className="flex items-center space-x-3 group">
@@ -730,7 +744,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <Input
                       value={newShotItem}
@@ -757,7 +771,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       {gearList.filter(item => item.checked).length}/{gearList.length}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-3 max-h-64 overflow-y-auto mb-4">
                     {gearList.map((item) => (
                       <div key={item.id} className="flex items-center space-x-3 group">
@@ -780,7 +794,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <Input
                       value={newGearItem}
@@ -855,7 +869,7 @@ export const ScriptEditor = ({ script, onRecord, onBack }: ScriptEditorProps) =>
                             </Button>
                           </div>
                         ))}
-                        
+
                         <Button
                           onClick={() => handleAddVersion(part.id)}
                           variant="outline"
